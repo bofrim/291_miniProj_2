@@ -83,8 +83,10 @@ def getTableChoice(tables):
     for table in tables.keys():
         print table
     choice = raw_input("From the list above which table would you like to normalize? ")
-    if choice == "q":
-        sys.exit(0)
+    while choice not in table:
+        if choice == "q":
+            sys.exit(0)
+        choice = raw_input("From the list above which table would you like to normalize? ")
     return choice
 
 def getNormalizationType():
