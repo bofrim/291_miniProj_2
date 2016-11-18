@@ -56,6 +56,8 @@ def conpute_closure(X, FDs, total_closure):
     pass
 
 def getDataBaseConnection():
+    print "Welcome to the Normalization program!"
+    print "Type 'q' to quit."
     db = raw_input("Enter the name of your data base: ")
     return sqlite3.connect('MiniProject2-InputExample.db')
 
