@@ -1,4 +1,5 @@
 import sqlite3
+import sys
 
 # sqlite> SELECT * FROM Input_FDS_R1;
 # LHS|RHS
@@ -56,13 +57,20 @@ def conpute_closure(X, FDs, total_closure):
     pass
 
 def getDataBaseConnection():
-    print "Welcome to the Normalization program!"
-    print "Type 'q' to quit."
     db = raw_input("Enter the name of your data base: ")
+    if db == "q":
+        sys.exit(0)
     return sqlite3.connect('MiniProject2-InputExample.db')
 
 
+
+
 if __name__ == "__main__":
-    connection = getDataBaseConnection()
-    cursor = connection.cursor()
-    master = c.execute("SELECT * FROM SQLITE_MASTER")
+    print "Welcome to the Normalization program!"
+    print "Type 'q' to quit."
+    while True:
+        connection = getDataBaseConnection()
+        cursor = connection.cursor()
+        master = cursor.execute("SELECT * FROM SQLITE_MASTER;")
+        tableNames = cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+        convertToTableDictionary(tableNames)
