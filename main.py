@@ -85,9 +85,5 @@ def createDict(tables):
 if __name__ == "__main__":
     connection = getDataBaseConnection()
     cursor = connection.cursor()
-    # master = cursor.execute("SELECT * FROM SQLITE_MASTER;")
     tables = cursor.execute("SELECT name FROM SQLITE_MASTER WHERE type = 'table';")
     createDict(tables)
-    # print(tables.fetchall())
-        # for el in row:
-            # print(el)
