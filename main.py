@@ -1,3 +1,5 @@
+import sqlite3
+
 # sqlite> SELECT * FROM Input_FDS_R1;
 # LHS|RHS
 # A,B,H|C,K
@@ -51,3 +53,14 @@ def mininal_cover(attributes, FDs):
 def conpute_closure(X, FDs, total_closure):
     # Take a set of attributes, X, and compute their closure on the dependencies, FDs
     # totalClosure provides a set of other attributes already in the closure.
+    pass
+
+def getDataBaseConnection():
+    db = raw_input("Enter the name of your data base: ")
+    return sqlite3.connect(db)
+
+
+if __name__ == "__main__":
+    connection = getDataBaseConnection()
+    cursor = connection.cursor()
+    master = c.execute("SELECT * FROM SQLITE_MASTER")
