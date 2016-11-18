@@ -71,19 +71,35 @@ def createDict(tables):
         if 'FDs' in str(r): fds.append(r)
         if 'FDs' not in str(r): names.append(r)
 
-    for r in names: print(str(r))
-    for r in fds: print(str(r))
 
     d = {}
     for n in names:
         for f in fds:
             if n in f: d[n] = f
-    print(d)
+    return d
 
+def getTableChoice(tables):
+    print "***********************************"
+    for table in tables.keys():
+        print table
+    choice = raw_input("From the list above which table would you like to normalize? ")
+    if choice == "q":
+        sys.exit(0)
+    return choice
+
+def getNormalizationType():
+    while(True):
+        choice = raw_input("Do you want 'BCNF' or '3NF': ")
+        if choice.upper() == "BCNF":
+            return "BCNF"
+        if choice.upper() == "3NF":
+            return "3NF"
 
 
 if __name__ == "__main__":
     connection = getDataBaseConnection()
     cursor = connection.cursor()
     tables = cursor.execute("SELECT name FROM SQLITE_MASTER WHERE type = 'table';")
-    createDict(tables)
+    tables = createDict(tables)
+    tableChoice = getTableChoice(tables)
+    norm = getNormalizationType()
