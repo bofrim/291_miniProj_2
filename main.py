@@ -57,7 +57,7 @@ def conpute_closure(X, FDs, total_closure):
 
 def getDataBaseConnection():
     db = raw_input("Enter the name of your data base: ")
-    return sqlite3.connect(db)
+    return sqlite3.connect('MiniProject2-InputExample.db')
 
 
 if __name__ == "__main__":
