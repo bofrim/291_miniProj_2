@@ -61,8 +61,30 @@ def getDataBaseConnection():
     db = raw_input("Enter the name of your data base: ")
     return sqlite3.connect('MiniProject2-InputExample.db')
 
+def createDict(tables):
+    names = []
+    fds = []
+    for r in tables:
+        r = str(r)[9:]
+        r = r.strip('\',)')
+        if 'FDs' in str(r): fds.append(r)
+        if 'FDs' not in str(r): names.append(r)
+
+    for r in names: print(str(r))
+    for r in fds: print(str(r))
+
+    d = {}
+    for n in names:
+        for f in fds:
+            if n in f: d[n] = f
+    print(d)
 
 if __name__ == "__main__":
     connection = getDataBaseConnection()
     cursor = connection.cursor()
-    master = c.execute("SELECT * FROM SQLITE_MASTER")
+    # master = cursor.execute("SELECT * FROM SQLITE_MASTER;")
+    tables = cursor.execute("SELECT name FROM SQLITE_MASTER WHERE type = 'table';")
+    createDict(tables)
+    # print(tables.fetchall())
+        # for el in row:
+            # print(el)
