@@ -12,6 +12,7 @@ def closure(X, FDs):
                 closure |= FD[1]
     return closure
 
+
 def createFDList(fdData):
     fdList = []
     for relation in fdData:
@@ -33,3 +34,19 @@ def partitionMinCover(minCover):
 
     ret = set()
     
+def getKeyFromFDs(fds):
+    #get a set of all attributes
+    superKey = set()
+    for fd in fds:
+        superKey |= fd[0] | fd[1]
+    
+    #check for all fds if the LHS is in the key and an element of the RHS is also in the key 
+    #remove the RHS from the key
+    for fd in fds:
+        if fd[0].issubset(superKey):
+            RHSClosure = closure(fd[1],fds)
+            RHSClosureMinusLHS = RHSClosure - fd[0]
+            superKey -= RHSClosureMinusLHS
+    return superKey
+
+
