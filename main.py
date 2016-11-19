@@ -49,13 +49,6 @@ from computations import *
 # 37|127.0|373|4699.0
 # 7|104.0|73|728.0
 
-
-def mininal_cover(attributes, FDs):
-    tempFDs = {}
-    # 1. Make RHS of each FD into a single attribute
-    # 2. Eliminate redundant attributes from LHS.
-    # 3. Delete redundant FDs
-
 def createDict(tables):
     names = []
     fds = []
