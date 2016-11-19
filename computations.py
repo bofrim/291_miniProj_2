@@ -11,3 +11,13 @@ def closure(X, FDs):
             if FD[0].issubset(closure):
                 closure |= FD[1]
     return closure
+
+def createFDList(fdData):
+    fdList = []
+    for relation in fdData:
+        LHS = relation[0]
+        ls = set(str(LHS).split(','))
+        RHS = relation[1]
+        rs = set(str(RHS).split(','))
+        fdList.append((ls,rs))
+    return fdList

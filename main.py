@@ -3,7 +3,7 @@ import sys
 import menu
 import bcnf
 import threenf
-import computations
+from computations import *
 
 
 # sqlite> SELECT * FROM Input_FDS_R1;
@@ -82,8 +82,8 @@ if __name__ == "__main__":
     tableChoice = menu.getTableChoice(tables)
     fdTableName = cursor.execute("SELECT name FROM SQLITE_MASTER WHERE NAME LIKE ?;", ('%'+tables[tableChoice]+'%',))
     fdTableName = fdTableName.fetchone()
-    fdTable = cursor.execute("SELECT * FROM {0};".format(fdTableName[0]))
-    FDs = []
-    for row in fdTable:
-        print row
+    fdData = cursor.execute("SELECT * FROM {0};".format(fdTableName[0]))
+    fdList = createFDList(fdData)
+    print(fdList)
+
     norm = menu.getNormalizationType()
