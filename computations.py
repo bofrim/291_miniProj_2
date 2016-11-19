@@ -27,9 +27,23 @@ def partitionMinCover(minCover):
     Partition the Minimal Cover into sets such that the LHS of each attribute
     in the set are the same
 
-    returns a set of lists of tuples of sets
-    i.e. {[({U1 LHS},{U2 RHS})],[({U2 LHS},{U2 RHS})], ... ,[({Un LHS},{Un RHS})]}
-    '''
+    param: list of tuples of sets
+    i.e. minCover = [({},{}),({},{}), ... ,({},{})]
 
-    ret = set()
-    
+    return: set of lists of tuples of sets
+    i.e. { [ ({U1 LHS1},{U1 RHS1}),({U1 LHS2},{U1 RHS2}) ],  [({U2 LHS},{U2 RHS})], ... ,[({Un LHS},{Un RHS})]}
+    '''
+    ret = []
+    had = []
+    for relation in minCover:
+        LHS = relation[0]
+        if LHS not in had:
+            ret.append([relation])
+            had.append(LHS)
+            continue
+        for l in ret:
+            if (l[0][0] is LHS):
+                l.append(relation)
+                break;
+        had.append(LHS)
+    return ret
