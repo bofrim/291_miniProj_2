@@ -1,10 +1,9 @@
 import sqlite3
 import sys
 
-<<<<<<< HEAD
 def threenf(fdLIst):
     return 0;
-=======
+
 def mininal_cover(attributes, FDs):
     # 1. Make RHS of each FD into a single attribute
     # 2. Eliminate redundant attributes from LHS.
@@ -22,4 +21,3 @@ def break_up_RHS(FDs):
         for attribute in FD[1]:
             new_FDs.append((FD[0], set([attribute])))
     return new_FDs
->>>>>>> origin/master
