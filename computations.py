@@ -54,11 +54,9 @@ def createSchemas(partitions):
     '''
     Creates a schema for each list of dependencies with equal LHS's
 
-    param:  list of lists of tuples of sets
+    param:  list of functional dependencies
 
-    return: dict
-        key = attributes in schema (set)
-        value = list of Functional Dependencies in schema (list of tuples of sets)
+    return: list of schemas (tuples of attributes and functional dependencies)
     '''
     schemas = []
     for fdList in partitions:
@@ -68,7 +66,6 @@ def createSchemas(partitions):
         for dep in fdList:
             attributes |= dep[1]
         schemas.append((attributes,fdList))
-        # schemas[attributes] = fdList
     return schemas
 
 def getKeyFromFDs(fds):
