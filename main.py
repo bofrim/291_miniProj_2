@@ -1,5 +1,10 @@
 import sqlite3
 import sys
+import menu
+import bcnf
+import threenf
+import computations
+
 
 # sqlite> SELECT * FROM Input_FDS_R1;
 # LHS|RHS
@@ -51,23 +56,6 @@ def mininal_cover(attributes, FDs):
     # 2. Eliminate redundant attributes from LHS.
     # 3. Delete redundant FDs
 
-def compute_closure(X, FDs):
-    # Take a set of attributes, X, and an array of tuples of sets, FDs, representing all of the functional dependencies for the table: conpute the closure of X
-    closure = X
-    old = {}
-    while(old != closure):
-        old = closure.copy()
-        for FD in FDs:
-            if FD[0].issubset(closure):
-                closure |= FD[1]
-    return closure
-
-def getDataBaseConnection():
-    db = raw_input("Enter the name of your data base: ")
-    if db == "q":
-        sys.exit(0)
-    return sqlite3.connect('MiniProject2-InputExample.db')
-
 def createDict(tables):
     names = []
     fds = []
@@ -84,37 +72,18 @@ def createDict(tables):
             if n in f: d[n] = f
     return d
 
-def getTableChoice(tables):
-    print "***********************************"
-    for table in tables.keys():
-        print table
-    choice = raw_input("From the list above which table would you like to normalize? ")
-    while choice not in table:
-        if choice == "q":
-            sys.exit(0)
-        choice = raw_input("From the list above which table would you like to normalize? ")
-    return choice
-
-def getNormalizationType():
-    while(True):
-        choice = raw_input("Do you want 'BCNF' or '3NF': ")
-        if choice.upper() == "BCNF":
-            return "BCNF"
-        if choice.upper() == "3NF":
-            return "3NF"
-
 
 if __name__ == "__main__":
-    connection = getDataBaseConnection()
+    connection = menu.getDataBaseConnection()
     cursor = connection.cursor()
     tables = cursor.execute("SELECT name FROM SQLITE_MASTER WHERE type = 'table';")
     tables = createDict(tables)
 
-    tableChoice = getTableChoice(tables)
+    tableChoice = menu.getTableChoice(tables)
     fdTableName = cursor.execute("SELECT name FROM SQLITE_MASTER WHERE NAME LIKE ?;", ('%'+tables[tableChoice]+'%',))
     fdTableName = fdTableName.fetchone()
     fdTable = cursor.execute("SELECT * FROM {0};".format(fdTableName[0]))
     FDs = []
     for row in fdTable:
         print row
-    norm = getNormalizationType()
+    norm = menu.getNormalizationType()
