@@ -85,5 +85,4 @@ if __name__ == "__main__":
     fdData = cursor.execute("SELECT * FROM {0};".format(fdTableName[0]))
     fdList = createFDList(fdData)
     print(fdList)
-
-    norm = menu.getNormalizationType()
+    menu.getNormalizationType(fdList)

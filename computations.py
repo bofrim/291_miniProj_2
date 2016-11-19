@@ -21,3 +21,15 @@ def createFDList(fdData):
         rs = set(str(RHS).split(','))
         fdList.append((ls,rs))
     return fdList
+
+def partitionMinCover(minCover):
+    '''
+    Partition the Minimal Cover into sets such that the LHS of each attribute
+    in the set are the same
+
+    returns a set of lists of tuples of sets
+    i.e. {[({U1 LHS},{U2 RHS})],[({U2 LHS},{U2 RHS})], ... ,[({Un LHS},{Un RHS})]}
+    '''
+
+    ret = set()
+    

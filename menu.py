@@ -1,5 +1,7 @@
 import sqlite3
 import sys
+from bcnf import *
+from threenf import *
 
 def getDataBaseConnection():
     db = raw_input("Enter the name of your data base: ")
@@ -18,12 +20,12 @@ def getTableChoice(tables):
         choice = raw_input("From the list above which table would you like to normalize? ")
     return choice
 
-def getNormalizationType():
+def getNormalizationType(fdList):
     while(True):
         choice = raw_input("Do you want 'BCNF' or '3NF': ")
         if choice.upper() == "BCNF":
-            return "BCNF"
+            return bcnf(fdList)
         if choice.upper() == "3NF":
-            return "3NF"
+            return threenf(fdList)
         if db == "q":
             sys.exit(0)
