@@ -51,10 +51,16 @@ def mininal_cover(attributes, FDs):
     # 2. Eliminate redundant attributes from LHS.
     # 3. Delete redundant FDs
 
-def conpute_closure(X, FDs, total_closure):
-    # Take a set of attributes, X, and compute their closure on the dependencies, FDs
-    # totalClosure provides a set of other attributes already in the closure.
-    pass
+def compute_closure(X, FDs):
+    # Take a set of attributes, X, and an array of tuples of sets, FDs, representing all of the functional dependencies for the table: conpute the closure of X
+    closure = X
+    old = {}
+    while(old != closure):
+        old = closure.copy()
+        for FD in FDs:
+            if FD[0].issubset(closure):
+                closure |= FD[1]
+    return closure
 
 def getDataBaseConnection():
     db = raw_input("Enter the name of your data base: ")
@@ -103,5 +109,12 @@ if __name__ == "__main__":
     cursor = connection.cursor()
     tables = cursor.execute("SELECT name FROM SQLITE_MASTER WHERE type = 'table';")
     tables = createDict(tables)
+
     tableChoice = getTableChoice(tables)
+    fdTableName = cursor.execute("SELECT name FROM SQLITE_MASTER WHERE NAME LIKE ?;", ('%'+tables[tableChoice]+'%',))
+    fdTableName = fdTableName.fetchone()
+    fdTable = cursor.execute("SELECT * FROM {0};".format(fdTableName[0]))
+    FDs = []
+    for row in fdTable:
+        print row
     norm = getNormalizationType()
