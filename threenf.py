@@ -29,7 +29,7 @@ def threenf(attributes, fdList):
 
     minCover = minimal_cover(attributes, fdList)
     print(minCover)
-    partions = partitionMinCover(minCover)
+    partitions = partitionMinCover(minCover)
     print(partitions)
     schemas = createSchemas(partitions)
     print(schemas)
@@ -64,12 +64,16 @@ def break_up_RHS(FDs):
     return new_FDs
 
 def simplify_LHS(FDs):
-    for FD in FDs:
+    original_FDs = copy.deepcopy(FDs)
+    for FD in original_FDs:
         # Iterate over each attribute of the LHS, and compute the closuer with the attribute removed, if the closure does not change, remove it from the LHS
         og_RHS = FD[1]
         for attribute in FD[0]:
-            if computations.closure(FD[0]-set([attribute]), FDs).issuperset(og_RHS):
-                FDs[FDs.index(FD)] = tuple(((FD[0]-set(attribute)).copy(), FD[1]))
+            LHS = FD[0]
+            remove_attribute = set([attribute])
+            close = computations.closure(copy.deepcopy(LHS-remove_attribute), copy.deepcopy(FDs))
+            if close.issuperset(og_RHS):
+                original_FDs[FDs.index(FD)] = tuple(((FD[0]-set(attribute)).copy(), FD[1]))
     return FDs
 
 def remove_redundant_FDs(FDs):
