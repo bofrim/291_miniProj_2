@@ -24,7 +24,7 @@ def isTrivial(fd):
 # return -1 if in BCNF eles return the index of the offending fd
 def inBCNF(schema):
     # get the key for the schema
-    minKey = computations.getKeyFromFDs(copy.deepcopy(schema[FDS]))
+    minKey = computations.getKeyFromFDs(schema[ATTRIBUTES],schema[FDS])
     # loop throught the functional dependancies
     i = 0
     for fd in schema[FDS]:

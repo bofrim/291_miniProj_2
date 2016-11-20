@@ -1,4 +1,5 @@
 import sqlite3
+import copy
 import sys
 
 def closure(X, FDs):
@@ -70,17 +71,16 @@ def createSchemas(partitions):
         schemas.append((attributes,fdList))
     return schemas
 
-def getKeyFromFDs(fds):
+def getKeyFromFDs(attributes,fds):
     #get a set of all attributes
-    superKey = set()
-    for fd in fds:
-        superKey |= fd[0] | fd[1]
+    superKey = copy.deepcopy(attributes)
+    localfds = copy.deepcopy(fds)
 
     #check for all fds if the LHS is in the key and an element of the RHS is also in the key
     #remove the RHS from the key
-    for fd in fds:
+    for fd in localfds:
         if fd[0].issubset(superKey):
-            RHSClosure = closure(fd[1],fds)
+            RHSClosure = closure(fd[1],localfds)
             RHSClosureMinusLHS = RHSClosure - fd[0]
             superKey -= RHSClosureMinusLHS
     return superKey
