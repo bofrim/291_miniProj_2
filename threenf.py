@@ -1,8 +1,9 @@
 import sqlite3
 import sys
 import computations
+import copy
 
-def threenf(attributes, fdLIst):
+def threenf(attributes, fdList):
     '''
     Synthesize relation into 3NF
 
@@ -13,12 +14,35 @@ def threenf(attributes, fdLIst):
     STEP 3
     schemas = createSchemas(partitions)
     STEP 4
-    check if all attributes are contained in the new schemas
+    if there is no superkey of the original relation in the schemas,
+    add it as Ro = (superkey, {})
+
+    Output tables are [schema[0] for schema in schemas]
+    Output FDs are [schema[1] for schema in schemas]
+
+    return: ( [Ouput relations], [Ouput FDs] )
 
     '''
-    return 0;
+    # superkey of original relation
+    superkey = computations.getKeyFromFDs(fdList)
+    print(superkey)
 
-def mininal_cover(attributes, FDs):
+    minCover = minimal_cover(attributes, fdList)
+    print(minCover)
+    partions = partitionMinCover(minCover)
+    print(partitions)
+    schemas = createSchemas(partitions)
+    print(schemas)
+
+    for schema in schemas:
+        if superkey == schema[0]:
+            # found the superkey, we gooooood
+            return ([schema[0] for schema in schemas],[schema[1] for schema in schemas]);
+    # oh no we didn't find the superkey
+
+    return ([schema[0] for schema in schemas],[schema[1] for schema in schemas]);
+
+def minimal_cover(attributes, FDs):
     # 1. Make RHS of each FD into a single attribute
     # 2. Eliminate redundant attributes from LHS.
     # 3. Delete redundant FDs
@@ -27,7 +51,10 @@ def mininal_cover(attributes, FDs):
     #   functional dependencies, the tupes represent each funcitional
     #   dependency, the sets are the LHS and the RHS:
     # [({LHS1}, {RHS1}), ({LHS2}, {RHS2}), ..., ({LHSn}, {RHSn})]
-    pass
+    FDs = break_up_RHS(FDs)
+    FDs = simplify_LHS(FDs)
+    FDs = remove_redundant_FDs(FDs)
+    return FDs
 
 def break_up_RHS(FDs):
     new_FDs = []
@@ -44,6 +71,17 @@ def simplify_LHS(FDs):
             if computations.closure(FD[0]-set([attribute]), FDs).issuperset(og_RHS):
                 FDs[FDs.index(FD)] = tuple(((FD[0]-set(attribute)).copy(), FD[1]))
     return FDs
+
+def remove_redundant_FDs(FDs):
+    original_FDs = copy.deepcopy(FDs)
+    for FD in original_FDs:
+        FDs_withoutFD = copy.deepcopy(original_FDs)
+        FDs_withoutFD.remove(FD)
+        closure_temp = computations.closure(copy.deepcopy(FD[0]), copy.deepcopy(FDs_withoutFD))
+        if FD[1].issubset(closure_temp):
+            FDs.remove(FD)
+    return FDs
+
 
 def partitionMinCover(minCover):
     '''
