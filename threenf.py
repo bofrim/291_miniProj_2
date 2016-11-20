@@ -37,11 +37,18 @@ def threenf(attributes, fdList):
     print("Partitions")
     print(partitions)
     print
+
+    newAttributes = set()
     schemas = createSchemas(partitions)
     print("Schemas")
     for schema in schemas:
         print(schema)
         print
+        for guy in schema[0]:
+            newAttributes.add(guy)
+
+    print("New Attributes")
+    print(newAttributes)
 
     for schema in schemas:
         if superkey == schema[0]:
@@ -119,7 +126,7 @@ def partitionMinCover(minCover):
             had.append(LHS)
             continue
         for l in partitions:
-            if (l[0][0] is LHS):
+            if (l[0][0] == LHS):
                 l.append(relation)
                 break;
         had.append(LHS)
