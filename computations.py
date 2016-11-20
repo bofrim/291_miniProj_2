@@ -23,51 +23,6 @@ def createFDList(fdData):
         fdList.append((ls,rs))
     return fdList
 
-def partitionMinCover(minCover):
-    '''
-    Partition the Minimal Cover into sets such that the LHS of each attribute
-    in the set are the same
-
-    param: list of tuples of sets
-    i.e. minCover = [({},{}),({},{}), ... ,({},{})]
-
-    return: list of lists of tuples of sets
-            list of Funtional Dependencies
-    i.e. [ [ ({U1 LHS1},{U1 RHS1}),({U1 LHS2},{U1 RHS2}) ],  [({U2 LHS},{U2 RHS})], ... ,[({Un LHS},{Un RHS})] ]
-    '''
-    partitions = []
-    had = []
-    for relation in minCover:
-        LHS = relation[0]
-        if LHS not in had:
-            partitions.append([relation])
-            had.append(LHS)
-            continue
-        for l in partitions:
-            if (l[0][0] is LHS):
-                l.append(relation)
-                break;
-        had.append(LHS)
-    return partitions
-
-def createSchemas(partitions):
-    '''
-    Creates a schema for each list of dependencies with equal LHS's
-
-    param:  list of functional dependencies
-
-    return: list of schemas (tuples of attributes and functional dependencies)
-    '''
-    schemas = []
-    for fdList in partitions:
-        attributes = set()
-        attributes |= fdList[0][0]
-        # add the rest of the attributes
-        for dep in fdList:
-            attributes |= dep[1]
-        schemas.append((attributes,fdList))
-    return schemas
-
 def getKeyFromFDs(fds):
     #get a set of all attributes
     superKey = set()
