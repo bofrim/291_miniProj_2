@@ -11,3 +11,11 @@ print computations.closure({'A', 'B'}, FDs)
 print "Fin"
 
 print computations.getKeyFromFDs(FDs)
+
+print
+print
+
+newTest = [({'A', 'B'}, {'C'}), ({'A', 'B'}, {'D'}), ({'C'}, {'D'})]
+print newTest
+close = computations.closure({'A', 'B'}, newTest)
+print newTest

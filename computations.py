@@ -3,11 +3,12 @@ import sys
 
 def closure(X, FDs):
     # Take a set of attributes, X, and an array of tuples of sets, FDs, representing all of the functional dependencies for the table: conpute the closure of X
+    temp_FDs = copyFDs(FDs)
     closure = X
     old = {}
     while(old != closure):
         old = closure.copy()
-        for FD in FDs:
+        for FD in temp_FDs:
             if FD[0].issubset(closure):
                 closure |= FD[1]
     return closure
@@ -83,3 +84,9 @@ def getKeyFromFDs(fds):
             RHSClosureMinusLHS = RHSClosure - fd[0]
             superKey -= RHSClosureMinusLHS
     return superKey
+
+def copyFDs(FDs):
+    new_FDs = list()
+    for FD in FDs:
+        new_FDs.append(tuple((FD[0], FD[1])))
+    return new_FDs

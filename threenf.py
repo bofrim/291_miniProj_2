@@ -1,6 +1,7 @@
 import sqlite3
 import sys
 import computations
+import copy
 
 def threenf(attributes, fdList):
     '''
@@ -67,6 +68,17 @@ def simplify_LHS(FDs):
             if computations.closure(FD[0]-set([attribute]), FDs).issuperset(og_RHS):
                 FDs[FDs.index(FD)] = tuple(((FD[0]-set(attribute)).copy(), FD[1]))
     return FDs
+
+def remove_redundant_FDs(FDs):
+    original_FDs = copy.deepcopy(FDs)
+    for FD in original_FDs:
+        FDs_withoutFD = copy.deepcopy(original_FDs)
+        FDs_withoutFD.remove(FD)
+        closure_temp = computations.closure(copy.deepcopy(FD[0]), copy.deepcopy(FDs_withoutFD))
+        if FD[1].issubset(closure_temp):
+            FDs.remove(FD)
+    return FDs
+
 
 def partitionMinCover(minCover):
     '''
