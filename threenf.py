@@ -51,7 +51,10 @@ def minimal_cover(attributes, FDs):
     #   functional dependencies, the tupes represent each funcitional
     #   dependency, the sets are the LHS and the RHS:
     # [({LHS1}, {RHS1}), ({LHS2}, {RHS2}), ..., ({LHSn}, {RHSn})]
-    pass
+    FDs = break_up_RHS(FDs)
+    FDs = simplify_LHS(FDs)
+    FDs = remove_redundant_FDs(FDs)
+    return FDs
 
 def break_up_RHS(FDs):
     new_FDs = []
