@@ -1,6 +1,15 @@
 import computations
 import copy
 
+# constants
+ATTRIBUTES = 0 
+FDS = 1
+LHS = 0
+RHS = 1
+BCNF = 0
+NON_BCNF = 1
+
+
 inputR = {'A','B','C','D','E','F','G','H'}
 
 inputFD = []
@@ -41,72 +50,76 @@ def inBCNF(decomp):
 
     return -1
 
-def decompose(thing, offendingIndex):
-    print "thing from decompose"
-    print thing
+def decompose(schema, offendingFD):
+    # print "schema from decompose"
+    # print schema
+
     
-    BCNFThing = [None,None]
-    NONBCNFThing = [None,None]
+    bcnfPartition = [{},[]]
+    nonBcnfPartition = [{},[]]
     
-    BCNFThing[0] = thing[1][offendingIndex][0] | thing[1][offendingIndex][1]
-    print("BCNFThing[0]")
-    print(BCNFThing[0])
-    NONBCNFThing[0] = thing[0] - thing[1][offendingIndex][1]
-    print("NONBCNFThing[0]")
-    print(NONBCNFThing[0])
-    BCNFThing[1] = []
-    NONBCNFThing[1] = []
+    bcnfPartition[ATTRIBUTES] = schema[FDS][offendingFD][LHS] | schema[FDS][offendingFD][RHS]
+    # print("bcnfPartition[0]")
+    # print(bcnfPartition[0])
+    nonBcnfPartition[ATTRIBUTES] = schema[ATTRIBUTES] - schema[FDS][offendingFD][RHS]
+    # print("nonBcnfPartition[0]")
+    # print(nonBcnfPartition[0])
     # now resolve the functional dependancies
 
-    # the BCNF one first, find all fds that involve only the attributes in BCNFThing
-    for fd in thing[1]:
-        allInvolvedInFD = fd[0] | fd[1]
-        if(allInvolvedInFD == BCNFThing[0]):
-            if len(fd[1]) > 0:
-                BCNFThing[1].append(fd)
+    # the BCNF one first, find all fds that involve only the attributes in bcnfPartition
+    for fd in schema[FDS]:
+        if(fd[LHS].issubset(bcnfPartition[ATTRIBUTES])):
+            # remove attributes that are not part of bcnfPartition[ATTRIBUTES] from RHS
+            fdToAdd = (copy.deepcopy(fd[LHS]), fd[RHS] & bcnfPartition[ATTRIBUTES])
+            if len(fdToAdd[RHS]) > 0:
+                bcnfPartition[FDS].append(fdToAdd)
+
+        # if(allInvolvedInFD == bcnfPartition[ATTRIBUTES]):
+        #     if len(fd[RHS]) > 0:
+        #         bcnfPartition[FDS].append(fd)
 
     # now the non-BCNF one, dont add FDs whose LHS has items from the offending FDs LHS
-    for fd in thing[1]:
-        if(bool(fd[0] & thing[1][offendingIndex][1])): # there is some overlap between the offending Fds RHS and the new fds LHS
+    for fd in schema[FDS]:
+        if(bool(fd[LHS] & schema[FDS][offendingFD][RHS])): # there is some overlap between the offending Fds RHS and the new fds LHS
             continue
         else: # remove items from the offending fds RHS then add
-            newFd = (fd[0], fd[1] - thing[1][offendingIndex][1])
-            if len(newFd[1]) > 0:
-                NONBCNFThing[1].append(newFd)
-    return ((BCNFThing[0],BCNFThing[1]),(NONBCNFThing[0],NONBCNFThing[1]))
+            newFd = (fd[LHS], fd[RHS] - schema[FDS][offendingFD][RHS])
+            if len(newFd[RHS]) > 0:
+                nonBcnfPartition[FDS].append(newFd)
+    return ((bcnfPartition[ATTRIBUTES],bcnfPartition[FDS]),(nonBcnfPartition[ATTRIBUTES],nonBcnfPartition[FDS]))
 
 
 
-def decomposition(S):
-    finalSet = []
+def convertToBCNF(nonBcnfRelations):
+    bcnfRelations = []
 
-    while len(S) != 0:
-        print("first S")
-        print(S)
-        for element in S:
-            offendingFdIndex = inBCNF(element)
-            print("offendingFdIndex: " + str(offendingFdIndex))
+    while len(nonBcnfRelations) != 0:
+        # print("first nonBcnfRelations")
+        # print(nonBcnfRelations)
+        for relation in nonBcnfRelations:
+            offendingFdIndex = inBCNF(relation)
+            # print("offendingFdIndex: " + str(offendingFdIndex))
             if(offendingFdIndex != -1 ):
-                # first return element will be in BCNF the second wont be
-                newThings =  decompose(element, offendingFdIndex) 
-                print("newThings[0]")
-                print(newThings[0])
-                print("newThings[1]")
-                print(newThings[1])
-                finalSet.append(newThings[0])
-                S.append(newThings[1])
-                S.remove(element)
+                # first return relation will be in BCNF the second wont be
+                partitions =  decompose(relation, offendingFdIndex) 
+                # print("partitions[BCNF]")
+                # print(partitions[BCNF])
+                # print("partitions[1]")
+                # print(partitions[NON_BCNF])
+                bcnfRelations.append(partitions[BCNF])
+                nonBcnfRelations.append(partitions[NON_BCNF])
+                nonBcnfRelations.remove(relation)
             else:
-                finalSet.append(element)
-                S.remove(element)
-        print("finalset")
-        print(finalSet)
-        print("S")
-        print(S)
-        raw_input()
+                bcnfRelations.append(relation)
+                nonBcnfRelations.remove(relation)
+        # print("bcnfRelations")
+        # print(bcnfRelations)
+        # print("nonBcnfRelations")
+        # print(nonBcnfRelations)
+        # raw_input()
 
-    return finalSet
+    return bcnfRelations
 
-print decomposition([(inputR,inputFD)])
+print convertToBCNF([(inputR,inputFD)])
 
                 
