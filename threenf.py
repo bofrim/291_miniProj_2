@@ -83,7 +83,7 @@ def simplify_LHS(FDs):
             close = computations.closure(copy.deepcopy(LHS-remove_attribute), copy.deepcopy(FDs))
             if close.issuperset(og_RHS):
                 original_FDs[FDs.index(FD)] = tuple(((FD[0]-set(attribute)).copy(), FD[1]))
-    return FDs
+    return original_FDs
 
 def remove_redundant_FDs(FDs):
     original_FDs = copy.deepcopy(FDs)
