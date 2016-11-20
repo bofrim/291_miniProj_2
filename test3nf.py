@@ -16,7 +16,7 @@ print expected
 if test == expected: print "Passed"
 print
 
-test = computations.partitionMinCover(test)
+test = threenf.partitionMinCover(test)
 print "Output (top) and expected output (bottom):"
 print test
 print
@@ -24,7 +24,7 @@ print expected2
 if test == expected2: print "Passed"
 print
 
-test = computations.createSchemas(test)
+test = threenf.createSchemas(test)
 print "Output (top) and expected output (bottom):"
 print test
 print
