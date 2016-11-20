@@ -2,7 +2,7 @@ import sqlite3
 import sys
 import computations
 
-def threenf(attributes, fdLIst):
+def threenf(attributes, fdList):
     '''
     Synthesize relation into 3NF
 
@@ -13,12 +13,29 @@ def threenf(attributes, fdLIst):
     STEP 3
     schemas = createSchemas(partitions)
     STEP 4
-    check if all attributes are contained in the new schemas
+    if there is no superkey of the original relation in the schemas,
+    add it as Ro = (superkey, {})
+
+    Output tables are [schema[0] for schema in schemas]
+    Output FDs are [schema[1] for schema in schemas]
+
+    return: ( [Ouput relations], [Ouput FDs] )
 
     '''
-    return 0;
+    superkey = computations.getKeyFromFDs(fdList) #set
+    print(superkey)
 
-def mininal_cover(attributes, FDs):
+    minCover = minimal_cover(attributes, FDs)
+    partions = partitionMinCover(minCover)
+    schemas = createSchemas(partitions)
+
+    #for schema in schemas:
+        # if schema[0]
+
+
+    return ([schema[0] for schema in schemas],[schema[1] for schema in schemas]);
+
+def minimal_cover(attributes, FDs):
     # 1. Make RHS of each FD into a single attribute
     # 2. Eliminate redundant attributes from LHS.
     # 3. Delete redundant FDs
