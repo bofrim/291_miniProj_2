@@ -25,14 +25,23 @@ def threenf(attributes, fdList):
     '''
     # superkey of original relation
     superkey = computations.getKeyFromFDs(fdList)
+    print("Superkey")
     print(superkey)
+    print
 
-    minCover = minimal_cover(attributes, fdList)
+    minCover = minimal_cover(fdList)
+    print("Min Cover")
     print(minCover)
+    print
     partitions = partitionMinCover(minCover)
+    print("Partitions")
     print(partitions)
+    print
     schemas = createSchemas(partitions)
-    print(schemas)
+    print("Schemas")
+    for schema in schemas:
+        print(schema)
+        print
 
     for schema in schemas:
         if superkey == schema[0]:
@@ -42,7 +51,7 @@ def threenf(attributes, fdList):
 
     return ([schema[0] for schema in schemas],[schema[1] for schema in schemas]);
 
-def minimal_cover(attributes, FDs):
+def minimal_cover(FDs):
     # 1. Make RHS of each FD into a single attribute
     # 2. Eliminate redundant attributes from LHS.
     # 3. Delete redundant FDs
