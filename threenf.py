@@ -22,16 +22,22 @@ def threenf(attributes, fdList):
     return: ( [Ouput relations], [Ouput FDs] )
 
     '''
-    superkey = computations.getKeyFromFDs(fdList) #set
+    # superkey of original relation
+    superkey = computations.getKeyFromFDs(fdList)
     print(superkey)
 
-    minCover = minimal_cover(attributes, FDs)
+    minCover = minimal_cover(attributes, fdList)
+    print(minCover)
     partions = partitionMinCover(minCover)
+    print(partitions)
     schemas = createSchemas(partitions)
+    print(schemas)
 
-    #for schema in schemas:
-        # if schema[0]
-
+    for schema in schemas:
+        if superkey == schema[0]:
+            # found the superkey, we gooooood
+            return ([schema[0] for schema in schemas],[schema[1] for schema in schemas]);
+    # oh no we didn't find the superkey
 
     return ([schema[0] for schema in schemas],[schema[1] for schema in schemas]);
 

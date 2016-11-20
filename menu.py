@@ -10,9 +10,10 @@ def getDataBaseConnection():
     return sqlite3.connect('MiniProject2-InputExample.db')
 
 def getTableChoice(tables):
-    print "***********************************"
+    print
     for table in tables.keys():
         print table
+    print('q (quit application)\n')
     choice = raw_input("From the list above which table would you like to normalize? ")
     while choice not in table:
         if choice == "q":

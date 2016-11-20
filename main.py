@@ -72,8 +72,9 @@ if __name__ == "__main__":
     tables = cursor.execute("SELECT name FROM SQLITE_MASTER WHERE type = 'table';")
     tables = createDict(tables)
 
-    # get a list of the functional dependencies
     tableChoice = menu.getTableChoice(tables)
+
+    # get a list of the functional dependencies
     fdTableName = cursor.execute("SELECT name FROM SQLITE_MASTER WHERE NAME LIKE ?;", ('%'+tables[tableChoice]+'%',))
     fdTableName = fdTableName.fetchone()
     fdData = cursor.execute("SELECT * FROM {0};".format(fdTableName[0]))
