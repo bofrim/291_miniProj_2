@@ -23,6 +23,7 @@ def createFDList(fdData):
         fdList.append((ls,rs))
     return fdList
 
+
 def partitionMinCover(minCover):
     '''
     Partition the Minimal Cover into sets such that the LHS of each attribute

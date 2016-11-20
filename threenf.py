@@ -2,7 +2,20 @@ import sqlite3
 import sys
 import computations
 
-def threenf(fdLIst):
+def threenf(attributes, fdLIst):
+    '''
+    Synthesize relation into 3NF
+
+    STEP 1
+    minCover = minimal_cover(attributes, FDs)
+    STEP 2
+    partions = partitionMinCover(minCover)
+    STEP 3
+    schemas = createSchemas(partitions)
+    STEP 4
+    check if all attributes are contained in the new schemas
+
+    '''
     return 0;
 
 def mininal_cover(attributes, FDs):
@@ -31,3 +44,56 @@ def simplify_LHS(FDs):
             if computations.closure(FD[0]-set([attribute]), FDs).issuperset(og_RHS):
                 FDs[FDs.index(FD)] = tuple(((FD[0]-set(attribute)).copy(), FD[1]))
     return FDs
+
+def partitionMinCover(minCover):
+    '''
+    Step 2 of Synthesizing 3NF
+
+    Partition the Minimal Cover into sets such that the LHS of each attribute
+    in the set are the same
+
+    param: list of tuples of sets
+    i.e. minCover = [({},{}),({},{}), ... ,({},{})]
+
+    return: list of lists of tuples of sets
+            list of Funtional Dependencies
+    i.e. [ [ ({U1 LHS1},{U1 RHS1}),({U1 LHS2},{U1 RHS2}) ],  [({U2 LHS},{U2 RHS})], ... ,[({Un LHS},{Un RHS})] ]
+    '''
+    partitions = []
+    had = []
+    for relation in minCover:
+        LHS = relation[0]
+        if LHS not in had:
+            partitions.append([relation])
+            had.append(LHS)
+            continue
+        for l in partitions:
+            if (l[0][0] is LHS):
+                l.append(relation)
+                break;
+        had.append(LHS)
+    return partitions
+
+def createSchemas(partitions):
+    '''
+    Step 3 of Synthesizing 3NF
+
+    Creates a schema for each list of dependencies with equal LHS's
+
+    param:  list of functional dependencies
+
+    return: list of schemas (tuples of attributes and functional dependencies)
+    '''
+    schemas = []
+    for fdList in partitions:
+        attributes = set()
+        attributes |= fdList[0][0]
+        # add the rest of the attributes
+        for dep in fdList:
+            attributes |= dep[1]
+        schemas.append((attributes,fdList))
+
+    # check if relation (Ro, {}) is needed in the created schema
+    # this guarantees losslesness
+
+    return schemas
