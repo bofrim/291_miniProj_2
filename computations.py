@@ -46,7 +46,7 @@ def partitionMinCover(minCover):
         for l in partitions:
             if (l[0][0] is LHS):
                 l.append(relation)
-                break;
+                break
         had.append(LHS)
     return partitions
 

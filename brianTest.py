@@ -1,19 +1,23 @@
 import computations
+import copy
 
-inputR = {'A','B','C','D','E','F','G','H','K'}
+inputR = {'A','B','C','D','E','F','G','H'}
 
 inputFD = []
-inputFD.append(({'A','B','H'},{'C','K'}))
-inputFD.append(({'A'},{'D'}))
-inputFD.append(({'C'},{'E'}))
+inputFD.append(({'A','B','H'},{'C'}))
+inputFD.append(({'A'},{'D','E'}))
+# inputFD.append(({'C'},{'E'}))
 inputFD.append(({'B','G','H'},{'F'}))
-inputFD.append(({'F'},{'A','D'}))
-inputFD.append(({'E'},{'F'}))
-inputFD.append(({'B','H'},{'E'}))
+inputFD.append(({'F'},{'A','D','H'}))
+# inputFD.append(({'E'},{'F'}))
+inputFD.append(({'B','H'},{'E','G'}))
 
-print computations.getKeyFromFDs(inputFD)
-
-
+print "Before find key"
+print inputFD
+otherFD = copy.deepcopy(inputFD)
+print computations.getKeyFromFDs(otherFD)
+print "after find key"
+print inputFD
 # Start with a decomposition which is 
 # decomp = [(inputR,inputFD)]
 
@@ -26,7 +30,7 @@ def isTrivial(fd):
 # return -1 if in BCNF eles return the index of the offending fd
 def inBCNF(decomp):
     # get the key for the decomp
-    minKey = computations.getKeyFromFDs(decomp[1])
+    minKey = computations.getKeyFromFDs(copy.deepcopy(decomp[1]))
     # loop throught the functional dependancies
     i = 0
     for fd in decomp[1]:
@@ -38,10 +42,12 @@ def inBCNF(decomp):
     return -1
 
 def decompose(thing, offendingIndex):
-
+    print "thing from decompose"
+    print thing
     
     BCNFThing = [None,None]
     NONBCNFThing = [None,None]
+    
     BCNFThing[0] = thing[1][offendingIndex][0] | thing[1][offendingIndex][1]
     print("BCNFThing[0]")
     print(BCNFThing[0])
@@ -56,7 +62,8 @@ def decompose(thing, offendingIndex):
     for fd in thing[1]:
         allInvolvedInFD = fd[0] | fd[1]
         if(allInvolvedInFD == BCNFThing[0]):
-            BCNFThing[1].append(fd)
+            if len(fd[1]) > 0:
+                BCNFThing[1].append(fd)
 
     # now the non-BCNF one, dont add FDs whose LHS has items from the offending FDs LHS
     for fd in thing[1]:
@@ -64,7 +71,8 @@ def decompose(thing, offendingIndex):
             continue
         else: # remove items from the offending fds RHS then add
             newFd = (fd[0], fd[1] - thing[1][offendingIndex][1])
-            NONBCNFThing[1].append(newFd)
+            if len(newFd[1]) > 0:
+                NONBCNFThing[1].append(newFd)
     return ((BCNFThing[0],BCNFThing[1]),(NONBCNFThing[0],NONBCNFThing[1]))
 
 
