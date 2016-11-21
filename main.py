@@ -79,13 +79,14 @@ if __name__ == "__main__":
     fdTableName = fdTableName.fetchone()
     fdData = cursor.execute("SELECT * FROM {0};".format(fdTableName[0]))
     fdList = createFDList(fdData)
-    print(fdList)
 
     # get a list of the attributes
     attribTableName = cursor.execute("SELECT name FROM SQLITE_MASTER WHERE NAME LIKE ?;", ('Input_'+tableChoice+'%',))
     attribTableName = attribTableName.fetchone()
     attribData = cursor.execute("SELECT * FROM {0};".format(attribTableName[0]))
     attributes = [description[0] for description in attribData.description]
+    print("Original Attributes")
     print(attributes)
+    print
 
     menu.getNormalizationType(attributes,fdList)
