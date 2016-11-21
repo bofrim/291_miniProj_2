@@ -3,6 +3,9 @@ import sys
 import menu
 import bcnf
 import threenf
+import normalization_menu
+import equivalence_menu
+import closure_menu
 from computations import *
 
 
@@ -72,21 +75,5 @@ if __name__ == "__main__":
     tables = cursor.execute("SELECT name FROM SQLITE_MASTER WHERE type = 'table';")
     tables = createDict(tables)
 
-    tableChoice = menu.getTableChoice(tables)
 
-    # get a list of the functional dependencies
-    fdTableName = cursor.execute("SELECT name FROM SQLITE_MASTER WHERE NAME LIKE ?;", ('%'+tables[tableChoice]+'%',))
-    fdTableName = fdTableName.fetchone()
-    fdData = cursor.execute("SELECT * FROM {0};".format(fdTableName[0]))
-    fdList = createFDList(fdData)
-
-    # get a list of the attributes
-    attribTableName = cursor.execute("SELECT name FROM SQLITE_MASTER WHERE NAME LIKE ?;", ('Input_'+tableChoice+'%',))
-    attribTableName = attribTableName.fetchone()
-    attribData = cursor.execute("SELECT * FROM {0};".format(attribTableName[0]))
-    attributes = [description[0] for description in attribData.description]
-    print("Original Attributes")
-    print(attributes)
-    print
-
-    menu.getNormalizationType(attributes,fdList)
+    normalization_menu.normalizationStory(tables, cursor)

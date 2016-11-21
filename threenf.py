@@ -55,11 +55,12 @@ def threenf(attributes, fdList):
     lostAttributes = [x for x in attributes if x not in newAttributes]
     if lostAttributes:
         schemas.append(tuple((superkey.union(set(lostAttributes)),[])))
-        return ([schema[0] for schema in schemas],[schema[1] for schema in schemas]);
         print("Schemas NEW")
         for schema in schemas:
             print(schema)
             print
+        return ([schema[0] for schema in schemas],[schema[1] for schema in schemas]);
+
 
     for schema in schemas:
         if schema[0] == superkey: return ([schema[0] for schema in schemas],[schema[1] for schema in schemas]);
