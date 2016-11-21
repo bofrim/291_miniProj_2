@@ -90,3 +90,81 @@ def copyFDs(FDs):
     for FD in FDs:
         new_FDs.append(tuple((FD[0], FD[1])))
     return new_FDs
+
+# is dependancy preserving if the closure of the decomposed functional dependacies is the 
+# same as the closure of the original functional dependancies
+def isDependancyPreserving(original, decomposition):
+    print "decomposition"
+    print decomposition
+
+    originalCpy = copy.deepcopy(original)
+    origninalFDClosure = []
+    for schema in originalCpy:
+        for FD in schema[1]:
+            origninalFDClosure.append((FD[0],closure(copy.deepcopy(FD[0]),copy.deepcopy(schema[1]))))
+
+    # print "Original FD closure"
+    # print origninalFDClosure
+
+    # get a union of all functional dependancies in the decomposition
+    decomopsitionFDs = []
+    for schema in decomposition:
+        for FD in schema[1]:
+            decomopsitionFDs.append(FD)
+    
+    # print "Unioned FDs"
+    # print decomopsitionFDs
+
+    # now get the closure of the union
+    decompositionFDClosure = []
+    for FD in decomopsitionFDs:
+        decompositionFDClosure.append((FD[0],closure(copy.deepcopy(FD[0]),copy.deepcopy(decomopsitionFDs))))
+    
+    # print "Unioned FDs closure"
+    # print decompositionFDClosure
+
+    #now do a comparison
+    #check that all the original fds are in the decomposition
+    # this works because all fds in the decomposition must be in the original
+    for FD in origninalFDClosure:
+        if not FD in decompositionFDClosure:
+            return False
+    return True
+
+def createTablesFromDecomposition(decomposition):
+    
+    for schema in decomposition:
+        #create a table for each schema
+        involvedAttributeString = ""
+        for attr in schema[0]:
+            involvedAttributeString += attr
+        tableName = "Output_R1_" + involvedAttributeString
+        print "name of new table: " + tableName
+        # create column
+        for attr in schema[0]:
+            print "create column " + attr + " of type str" 
+
+        # now make a fd table
+        fdTableName = "Output_FDS_R1_" + involvedAttributeString
+        print "name of new table: " +  fdTableName
+        print "create column LHS"
+        print "create column RHS"
+
+        for fd in schema[1]:
+            LHS = ",".join(fd[0])
+            RHS = ",".join(fd[1])
+            print LHS + " | " + RHS   
+        
+
+        
+
+    
+
+
+
+    
+
+
+
+
+

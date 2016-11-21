@@ -115,4 +115,11 @@ inputFD2.append(({'F'},{'A','D'}))
 inputFD2.append(({'E'},{'F'}))
 inputFD2.append(({'B','H'},{'E'}))
 
-print convertToBCNF([(inputR2,inputFD2)])
+decomposition =  convertToBCNF([(inputR2,inputFD2)])
+print decomposition
+print "dependancy preserving"
+print computations.isDependancyPreserving([(inputR2,inputFD2)],decomposition)
+
+print "test create table logic"
+
+computations.createTablesFromDecomposition(decomposition)

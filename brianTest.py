@@ -39,7 +39,7 @@ def isTrivial(fd):
 # return -1 if in BCNF eles return the index of the offending fd
 def inBCNF(decomp):
     # get the key for the decomp
-    minKey = computations.getKeyFromFDs(copy.deepcopy(decomp[1]))
+    minKey = computations.getKeyFromFDs(decomp[0],decomp[1])
     # loop throught the functional dependancies
     i = 0
     for fd in decomp[1]:
