@@ -133,6 +133,11 @@ def isDependancyPreserving(original, decomposition):
 
 def createTablesFromDecomposition(decomposition):
     
+    db_file_path="./mp2.db"
+    conn = sqlite3.connect(db_file_path)
+
+    c = conn.cursor()
+
     for schema in decomposition:
         #create a table for each schema
         involvedAttributeString = ""
@@ -140,21 +145,58 @@ def createTablesFromDecomposition(decomposition):
             involvedAttributeString += attr
         tableName = "Output_R1_" + involvedAttributeString
         print "name of new table: " + tableName
-        # create column
+        # Create table
+        columnNames = ""
+
+        #generate the create column stirng
+        attrCount = 0
         for attr in schema[0]:
-            print "create column " + attr + " of type str" 
+            columnNames += " `" + attr + "`"
+            columnNames += " "
+            columnNames += "TEXT" # TO DO: actually get the types
+            if (attrCount < len(schema[0]) - 1): 
+                columnNames += ","
+            attrCount += 1
+
+        #gernerate the create primary key string
+        attrCount = 0
+        primaryKeySet = getKeyFromFDs(schema[0],schema[1])
+        # primaryKeyStr = ",".join(primaryKeySet)
+        primaryKeyStr = ""
+        for keyAttr in primaryKeySet:
+            primaryKeyStr += "`" + keyAttr + "`"
+            if (attrCount < len(primaryKeySet) - 1): 
+                primaryKeyStr += ","
+            attrCount += 1
+
+
+        createTableStr = ' CREATE TABLE `' + tableName + '` (' + columnNames + ', ' + 'PRIMARY KEY (' + primaryKeyStr + ')' + '); '
+
+        print "create table str"
+        print createTableStr
+
+        c.execute(createTableStr)
+        # create column
+
 
         # now make a fd table
         fdTableName = "Output_FDS_R1_" + involvedAttributeString
-        print "name of new table: " +  fdTableName
-        print "create column LHS"
-        print "create column RHS"
 
+        createFDTableStr = ' CREATE TABLE ' + fdTableName + ' ( `LHS` TEXT, `RHS` TEXT ); '
+        c.execute(createFDTableStr)
+
+        print "crate fd table str"
+        print createFDTableStr
+
+        # add funtional dependancies
         for fd in schema[1]:
             LHS = ",".join(fd[0])
             RHS = ",".join(fd[1])
             print LHS + " | " + RHS   
-        
+            insertStatement = 'INSERT INTO ' + fdTableName + ' VALUES ("'+ LHS +'", "'+ RHS +'")'
+            print insertStatement
+            c.execute( insertStatement)
+        conn.commit()
 
         
 
