@@ -91,7 +91,7 @@ def copyFDs(FDs):
         new_FDs.append(tuple((FD[0], FD[1])))
     return new_FDs
 
-# is dependancy preserving if the closure of the decomposed functional dependacies is the 
+# is dependancy preserving if the closure of the decomposed functional dependacies is the
 # same as the closure of the original functional dependancies
 def isDependancyPreserving(original, decomposition):
     print "decomposition"
@@ -111,7 +111,7 @@ def isDependancyPreserving(original, decomposition):
     for schema in decomposition:
         for FD in schema[1]:
             decomopsitionFDs.append(FD)
-    
+
     # print "Unioned FDs"
     # print decomopsitionFDs
 
@@ -119,7 +119,7 @@ def isDependancyPreserving(original, decomposition):
     decompositionFDClosure = []
     for FD in decomopsitionFDs:
         decompositionFDClosure.append((FD[0],closure(copy.deepcopy(FD[0]),copy.deepcopy(decomopsitionFDs))))
-    
+
     # print "Unioned FDs closure"
     # print decompositionFDClosure
 
@@ -132,8 +132,8 @@ def isDependancyPreserving(original, decomposition):
     return True
 
 def createTablesFromDecomposition(decomposition):
-    
-    db_file_path="./mp2.db"
+
+    db_file_path="./MiniProject2-InputExample.db"
     conn = sqlite3.connect(db_file_path)
 
     c = conn.cursor()
@@ -154,7 +154,7 @@ def createTablesFromDecomposition(decomposition):
             columnNames += " `" + attr + "`"
             columnNames += " "
             columnNames += "TEXT" # TO DO: actually get the types
-            if (attrCount < len(schema[0]) - 1): 
+            if (attrCount < len(schema[0]) - 1):
                 columnNames += ","
             attrCount += 1
 
@@ -165,48 +165,29 @@ def createTablesFromDecomposition(decomposition):
         primaryKeyStr = ""
         for keyAttr in primaryKeySet:
             primaryKeyStr += "`" + keyAttr + "`"
-            if (attrCount < len(primaryKeySet) - 1): 
+            if (attrCount < len(primaryKeySet) - 1):
                 primaryKeyStr += ","
             attrCount += 1
 
-
-        createTableStr = ' CREATE TABLE `' + tableName + '` (' + columnNames + ', ' + 'PRIMARY KEY (' + primaryKeyStr + ')' + '); '
-
-        # print "create table str"
-        # print createTableStr
-
+        
+        dropTableStr = " DROP TABLE IF EXISTS " + tableName + ";"
+        createTableStr = ' CREATE TABLE ' + tableName + ' (' + columnNames + ', ' + 'PRIMARY KEY (' + primaryKeyStr + ')' + '); '
+        c.execute(dropTableStr)
         c.execute(createTableStr)
-        # create column
-
 
         # now make a fd table
         fdTableName = "Output_FDS_R1_" + involvedAttributeString
-
         createFDTableStr = ' CREATE TABLE ' + fdTableName + ' ( `LHS` TEXT, `RHS` TEXT ); '
+        dropFDTableStr = " DROP TABLE IF EXISTS " + fdTableName + ";"
+        c.execute(dropFDTableStr)
         c.execute(createFDTableStr)
-
-        # print "crate fd table str"
-        # print createFDTableStr
 
         # add funtional dependancies
         for fd in schema[1]:
             LHS = ",".join(fd[0])
             RHS = ",".join(fd[1])
-            # print LHS + " | " + RHS   
+            # print LHS + " | " + RHS
             insertStatement = 'INSERT INTO ' + fdTableName + ' VALUES ("'+ LHS +'", "'+ RHS +'")'
             # print insertStatement
             c.execute( insertStatement)
         conn.commit()
-
-        
-
-    
-
-
-
-    
-
-
-
-
-
