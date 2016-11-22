@@ -44,5 +44,5 @@ if __name__ == "__main__":
         choice = raw_input("What would you like to do: ")
         if choice == 'N': normalization_menu.normalizationStory(tables, cursor)
         elif choice == 'C': closure_menu.closureStory(tables, cursor)
-        # elif choice == 'E': equivalence_menu.equivalenceStory(tables, cursor)
+        elif choice == 'E': equivalence_menu.equivalenceStory(tables, cursor)
         elif choice.upper() == 'Q': sys.exit(0)

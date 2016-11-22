@@ -3,35 +3,53 @@ import sys
 from bcnf import *
 from threenf import *
 from computations import *
+import copy
 
 def getTableNames():
     print
     print "You will need to provide two sets of dependencies to test equivalence for."
-    print "(Use a space to separate the table names)"
+    print "(Use a comma to separate the table names)"
     F1_names = raw_input("Please enter the names of tables that make up the first set: ")
     F2_names = raw_input("Please enter the names of tables that make up the second set: ")
+    F1_names = [x.strip() for x in F1_names.split(',')]
+    F2_names = [x.strip() for x in F2_names.split(',')]
     return (F1_names, F2_names)
 
-def getFDUnion(table_names, cursor):
-    #TODO Test this method with a database
-    listOf_FDs = []
-    for fdTableName in table_names.split().strip():
-        fdTableName = cursor.execute("SELECT name FROM SQLITE_MASTER WHERE NAME LIKE ?;", ('%'+tables[tableChoice]+'%',))
-        fdTableName = fdTableName.fetchone()
-        fdData = cursor.execute("SELECT * FROM {0};".format(fdTableName[0]))
-        fdList = createFDList(fdData)
-        list_FDs.append(fdList)
-    return listOf_FDs
+def unionFDLists(fd1, fd2):
+    return fd1+fd2
 
+def getFDUnion(fdTableNames, cursor, tables):
+    #TODO Test this method with a database
+    fdDataUnion = []
+    for tableName in fdTableNames:
+        fds = cursor.execute("SELECT name FROM SQLITE_MASTER WHERE NAME LIKE ?;", ('%'+tableName+'%',))
+        fds = fds.fetchone()
+        fds = cursor.execute("SELECT * FROM {0};".format(fds[0]))
+        fds = computations.createFDList(fds)
+        fdDataUnion = unionFDLists(fdDataUnion, fds)
+    return fdDataUnion
+
+def checkEquivalence(F1, F2):
+    for fd in F1:
+        if not fd[1].issubset(closure(copy.deepcopy(fd[0]), copy.deepcopy(F2))):
+            # print "______________________________________"
+            # print "The violating closure was: element(" + str(fd[0]) + ", " + str(fd[1]) + ") on closure: " + str(closure(copy.deepcopy(fd[0]), copy.deepcopy(F2)))
+            # raw_input("______________________________________")
+            return False
+    return True
 
 def equivalenceStory(tables, cursor):
     F1_names, F2_names = getTableNames()
 
     # get a list of the functional dependencies
-    F1 = getFDUnion(F1_names, cursor)
-    F2 = getFDUnion(F2_names, cursor)
-    #TODO check the equivalence of F1 over F2
-    #TODO chenk the equivalence of F2 over F1
+    F1 = getFDUnion(F1_names, cursor, tables)
+    F2 = getFDUnion(F2_names, cursor, tables)
+    if checkEquivalence(F1, F2) and checkEquivalence(F2, F1):
+        print
+        print "The sets of functional dependancies are equivalent!"
+        return
+    print
+    print "The sets of functional dependancies are not equivalent :("
 
 
 
