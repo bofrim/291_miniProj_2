@@ -15,7 +15,7 @@ def unionFDLists(fd1, fd2):
     '''
     Computes the union of two lists of tuples of sets (FDs)
     '''
-    return [x for x in fd1 if x not in fd2]+[x for x in fd2]
+    return [x for x in fd1 if x not in fd2]+fd2
 
 def createFDUnions(fdTableNames,cursor):
     '''

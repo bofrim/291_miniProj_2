@@ -151,7 +151,7 @@ def createTablesFromDecomposition(decomposition):
         #generate the create column stirng
         attrCount = 0
         for attr in schema[0]:
-            columnNames += " `" + attr + "`"
+            columnNames += " " + attr + ""
             columnNames += " "
             columnNames += "TEXT" # TO DO: actually get the types
             if (attrCount < len(schema[0]) - 1):
@@ -169,7 +169,7 @@ def createTablesFromDecomposition(decomposition):
                 primaryKeyStr += ","
             attrCount += 1
 
-        
+
         dropTableStr = " DROP TABLE IF EXISTS " + tableName + ";"
         createTableStr = ' CREATE TABLE ' + tableName + ' (' + columnNames + ', ' + 'PRIMARY KEY (' + primaryKeyStr + ')' + '); '
         c.execute(dropTableStr)
@@ -186,8 +186,29 @@ def createTablesFromDecomposition(decomposition):
         for fd in schema[1]:
             LHS = ",".join(fd[0])
             RHS = ",".join(fd[1])
+
             # print LHS + " | " + RHS
             insertStatement = 'INSERT INTO ' + fdTableName + ' VALUES ("'+ LHS +'", "'+ RHS +'")'
             # print insertStatement
             c.execute( insertStatement)
         conn.commit()
+
+def makeSelect(attrs):
+    selectParameterStr = ""
+    for attr in attr:
+        selectParameterStr + ", " + attr
+    return selectParameterStr[:-2]
+
+def createNewFilledTables(attributes, newTableName, oldTableName, cursor):
+    selectParameterStr = makeSelect()
+    dropStr = " DROP TABLE IF EXISTS " + newTableName + ";"
+    createStr = "CREATE TABLE " + newTableName + " AS SELECT " + selectParameterStr + " FROM " + oldTableName + ";"
+    cursor.execute(dropStr)
+    cursor.execute(createStr)
+
+def createNewEmptyTables(attributes, newTableName, oldTableName, cursor):
+    selectParameterStr = makeSelect()
+    dropStr = " DROP TABLE IF EXISTS " + newTableName + ";"
+    createStr = "CREATE TABLE " + newTableName + " AS SELECT " + selectParameterStr + " FROM " + oldTableName + " WHERE False;"
+    cursor.execute(dropStr)
+    cursor.execute(createStr)
