@@ -24,7 +24,7 @@ def threenf(attributes, fdList):
 
     '''
     # superkey of original relation
-    superkey = computations.getKeyFromFDs(fdList)
+    superkey = computations.getKeyFromFDs(set(attributes),fdList)
     print("Superkey")
     print(superkey)
     print
@@ -47,15 +47,25 @@ def threenf(attributes, fdList):
         for guy in schema[0]:
             newAttributes.add(guy)
 
+    newAttributes = list(newAttributes)
     print("New Attributes")
     print(newAttributes)
+    print
+
+    lostAttributes = [x for x in attributes if x not in newAttributes]
+    if lostAttributes:
+        schemas.append(tuple((superkey.union(set(lostAttributes)),[])))
+        print("Schemas NEW")
+        for schema in schemas:
+            print(schema)
+            print
+        return ([schema[0] for schema in schemas],[schema[1] for schema in schemas]);
+
 
     for schema in schemas:
-        if superkey == schema[0]:
-            # found the superkey, we gooooood
-            return ([schema[0] for schema in schemas],[schema[1] for schema in schemas]);
-    # oh no we didn't find the superkey
+        if schema[0] == superkey: return ([schema[0] for schema in schemas],[schema[1] for schema in schemas]);
 
+    schemas.append(tuple((superkey,[])))
     return ([schema[0] for schema in schemas],[schema[1] for schema in schemas]);
 
 def minimal_cover(FDs):
@@ -150,8 +160,4 @@ def createSchemas(partitions):
         for dep in fdList:
             attributes |= dep[1]
         schemas.append((attributes,fdList))
-
-    # check if relation (Ro, {}) is needed in the created schema
-    # this guarantees losslesness
-
     return schemas

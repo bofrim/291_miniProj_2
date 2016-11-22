@@ -5,7 +5,7 @@ import copy
 
 
 # constants
-ATTRIBUTES = 0 
+ATTRIBUTES = 0
 FDS = 1
 LHS = 0
 RHS = 1
@@ -40,8 +40,8 @@ def decompose(schema, offendingFD):
 
     bcnfPartition = [{},[]]
     nonBcnfPartition = [{},[]]
-    
-    # the attributes in the bcnf partition are those involved in the offending fd 
+
+    # the attributes in the bcnf partition are those involved in the offending fd
     bcnfPartition[ATTRIBUTES] = schema[FDS][offendingFD][LHS] | schema[FDS][offendingFD][RHS]
     # the attriburts in the non-bcnf partition are those in the input schema minus the RHS of the offendingFD
     nonBcnfPartition[ATTRIBUTES] = schema[ATTRIBUTES] - schema[FDS][offendingFD][RHS]
@@ -77,7 +77,7 @@ def convertToBCNF(nonBcnfRelations):
 
             if(offendingFdIndex != -1 ):
 
-                partitions =  decompose(relation, offendingFdIndex) 
+                partitions =  decompose(relation, offendingFdIndex)
                 bcnfRelations.append(partitions[BCNF])
                 nonBcnfRelations.append(partitions[NON_BCNF])
                 nonBcnfRelations.remove(relation)
@@ -88,38 +88,38 @@ def convertToBCNF(nonBcnfRelations):
     return bcnfRelations
 
 
+if __name__ == '__main__':
+    # TEST 1
+    inputR = {'A','B','C','D','E','F','G','H'}
 
-# TEST 1
-inputR = {'A','B','C','D','E','F','G','H'}
+    inputFD = []
+    inputFD.append(({'A','B','H'},{'C'}))
+    inputFD.append(({'A'},{'D','E'}))
+    # inputFD.append(({'C'},{'E'}))
+    inputFD.append(({'B','G','H'},{'F'}))
+    inputFD.append(({'F'},{'A','D','H'}))
+    # inputFD.append(({'E'},{'F'}))
+    inputFD.append(({'B','H'},{'E','G'}))
 
-inputFD = []
-inputFD.append(({'A','B','H'},{'C'}))
-inputFD.append(({'A'},{'D','E'}))
-# inputFD.append(({'C'},{'E'}))
-inputFD.append(({'B','G','H'},{'F'}))
-inputFD.append(({'F'},{'A','D','H'}))
-# inputFD.append(({'E'},{'F'}))
-inputFD.append(({'B','H'},{'E','G'}))
+    print convertToBCNF([(inputR,inputFD)])
 
-print convertToBCNF([(inputR,inputFD)])
+    # TEST 2
+    inputR2 = {'A','B','C','D','E','F','G','H','K'}
 
-# TEST 2
-inputR2 = {'A','B','C','D','E','F','G','H','K'}
+    inputFD2 = []
+    inputFD2.append(({'A','B','H'},{'C','K'}))
+    inputFD2.append(({'A'},{'D'}))
+    inputFD2.append(({'C'},{'E'}))
+    inputFD2.append(({'B','G','H'},{'F'}))
+    inputFD2.append(({'F'},{'A','D'}))
+    inputFD2.append(({'E'},{'F'}))
+    inputFD2.append(({'B','H'},{'E'}))
 
-inputFD2 = []
-inputFD2.append(({'A','B','H'},{'C','K'}))
-inputFD2.append(({'A'},{'D'}))
-inputFD2.append(({'C'},{'E'}))
-inputFD2.append(({'B','G','H'},{'F'}))
-inputFD2.append(({'F'},{'A','D'}))
-inputFD2.append(({'E'},{'F'}))
-inputFD2.append(({'B','H'},{'E'}))
+    decomposition =  convertToBCNF([(inputR2,inputFD2)])
+    print decomposition
+    print "dependancy preserving"
+    print computations.isDependancyPreserving([(inputR2,inputFD2)],decomposition)
 
-decomposition =  convertToBCNF([(inputR2,inputFD2)])
-print decomposition
-print "dependancy preserving"
-print computations.isDependancyPreserving([(inputR2,inputFD2)],decomposition)
+    print "test create table logic"
 
-print "test create table logic"
-
-computations.createTablesFromDecomposition(decomposition)
+    computations.createTablesFromDecomposition(decomposition)
