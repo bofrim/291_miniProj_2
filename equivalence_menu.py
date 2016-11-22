@@ -10,13 +10,16 @@ def getTableNames():
     print "You will need to provide two sets of dependencies to test equivalence for."
     print "(Use a comma to separate the table names)"
     F1_names = raw_input("Please enter the names of tables that make up the first set: ")
+    if str(F1_names.upper()) == "Q": return (-1,-1)
+
     F2_names = raw_input("Please enter the names of tables that make up the second set: ")
+    if F2_names.upper == "Q": return (-1, -1)
     F1_names = [x.strip() for x in F1_names.split(',')]
     F2_names = [x.strip() for x in F2_names.split(',')]
     return (F1_names, F2_names)
 
 def unionFDLists(fd1, fd2):
-    return fd1+fd2
+    return [x for x in fd1 if x not in fd2]+[x for x in fd2]
 
 def getFDUnion(fdTableNames, cursor, tables):
     #TODO Test this method with a database
@@ -40,6 +43,10 @@ def checkEquivalence(F1, F2):
 
 def equivalenceStory(tables, cursor):
     F1_names, F2_names = getTableNames()
+    if F1_names == -1 or F2_names == -1:
+        print "Returning to main menu..."
+        print
+        return
 
     # get a list of the functional dependencies
     F1 = getFDUnion(F1_names, cursor, tables)
