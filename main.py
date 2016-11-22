@@ -35,7 +35,6 @@ if __name__ == "__main__":
     cursor = connection.cursor()
     tables = cursor.execute("SELECT name FROM SQLITE_MASTER WHERE type = 'table';")
     tables = createDict(tables)
-    
 
     print("\nConnected to Database!")
     choice = ""
@@ -43,6 +42,6 @@ if __name__ == "__main__":
         print("\n1. Normalize a Table (N)\n2. Test Closure on a Set of Attributes (C)\n3. Test Equivalency of Sets of Functional Dependencies (E)\n4. Quit Application (Q)")
         choice = raw_input("What would you like to do: ")
         if choice == 'N': normalization_menu.normalizationStory(tables, cursor)
-        elif choice == 'C': closure_menu.closureStory(tables, cursor)
+        elif choice == 'C': closure_menu.closureStory(cursor)
         elif choice == 'E': equivalence_menu.equivalenceStory(tables, cursor)
         elif choice.upper() == 'Q': sys.exit(0)
