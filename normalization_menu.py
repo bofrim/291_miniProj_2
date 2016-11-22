@@ -9,12 +9,12 @@ def getTableChoice(tables):
     print("\nTables:")
     for table in tables.keys():
         print table
-    print('q (quit application)\n')
-    choice = raw_input("From the list above which table would you like to normalize? ")
+    print("\nEnter Q at anytime to quit")
+    choice = " "
     while choice not in table:
-        if choice == "q":
-            sys.exit(0)
         choice = raw_input("From the list above which table would you like to normalize? ")
+        if choice == "q" or choice == '\n':
+            return 'Q'
     return choice
 
 def getNormalizationType(attributes, fdList):
@@ -25,11 +25,11 @@ def getNormalizationType(attributes, fdList):
         if choice.upper() == "3NF":
             return threenf(attributes, fdList)
         if db == "q":
-            sys.exit(0)
-
+            return db
 
 def normalizationStory(tables, cursor):
     tableChoice = getTableChoice(tables)
+    if tableChoice.upper() == 'Q': return
 
     # get a list of the functional dependencies
     fdTableName = cursor.execute("SELECT name FROM SQLITE_MASTER WHERE NAME LIKE ?;", ('%'+tables[tableChoice]+'%',))
@@ -47,3 +47,4 @@ def normalizationStory(tables, cursor):
     print
 
     getNormalizationType(attributes,fdList)
+    return

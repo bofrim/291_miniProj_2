@@ -12,18 +12,21 @@ def getFDTables():
         return fdTableNames
 
 def unionFDLists(fd1, fd2):
-    return fd1+fd2
+    '''
+    Computes the union of two lists of tuples of sets (FDs)
+    '''
+    return [x for x in fd1 if x not in fd2]+[x for x in fd2]
 
 def computeClosures(attributes,FDs):
     '''
     Computes closure of the individual attributes in a list over the specified FDs
     '''
     for a in attributes:
-        print "closure of ",a,"..."
-        print computations.closure(set(a),FDs), "\n"
+        print "Closure of",a,"..."
+        print [x for x in computations.closure(set(a),FDs)], "\n"
 
 def closureStory(tables, cursor):
-    print("\nEnter Q at anytime to quit")
+    print("Enter Q at anytime to quit")
     while(True):
         attributes = raw_input("Please specify the set Attributes (seperated by commas): ")
         if attributes.upper() == 'Q': return
@@ -43,5 +46,5 @@ def closureStory(tables, cursor):
                 fdDataUnion = unionFDLists(fdDataUnion, fds)
 
             computeClosures(attributes,fdDataUnion)
-            print
+            print("\nEnter Q at anytime to quit")
     return
