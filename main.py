@@ -41,7 +41,7 @@ if __name__ == "__main__":
     while(True):
         print("\n1. Normalize a Table (N)\n2. Test Closure on a Set of Attributes (C)\n3. Test Equivalency of Sets of Functional Dependencies (E)\n4. Quit Application (Q)")
         choice = raw_input("What would you like to do: ")
-        if choice == 'N': normalization_menu.normalizationStory(tables, cursor)
-        elif choice == 'C': closure_menu.closureStory(cursor)
-        elif choice == 'E': equivalence_menu.equivalenceStory(tables, cursor)
+        if choice.upper() == 'N': normalization_menu.normalizationStory(tables, cursor)
+        elif choice.upper() == 'C': closure_menu.closureStory(cursor)
+        elif choice.upper() == 'E': equivalence_menu.equivalenceStory(tables, cursor)
         elif choice.upper() == 'Q': sys.exit(0)

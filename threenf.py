@@ -8,27 +8,25 @@ def threenf(attributes, fdList):
     Synthesize relation into 3NF
 
     STEP 1
-    minCover = minimal_cover(attributes, FDs)
+    Calculate min cover of the schema
     STEP 2
-    partions = partitionMinCover(minCover)
+    Partition the min cover into relations
     STEP 3
-    schemas = createSchemas(partitions)
+    Create the new schemas from the partitioned relations
     STEP 4
     if there is no superkey of the original relation in the schemas,
     add it as Ro = (superkey, {})
 
-    Output tables are [schema[0] for schema in schemas]
-    Output FDs are [schema[1] for schema in schemas]
-
     return: ( [Ouput relations], [Ouput FDs] )
-
     '''
     # superkey of original relation
     superkey = computations.getKeyFromFDs(set(attributes),fdList)
+    print
     print("Superkey")
     print(superkey)
     print
 
+    # Step 1
     minCover = minimal_cover(fdList)
     print("Min Cover")
     print(minCover)
@@ -38,6 +36,7 @@ def threenf(attributes, fdList):
     print(partitions)
     print
 
+    # Step 2
     newAttributes = set()
     schemas = createSchemas(partitions)
     print("Schemas")
@@ -47,13 +46,17 @@ def threenf(attributes, fdList):
         for guy in schema[0]:
             newAttributes.add(guy)
 
+    # Step 3
     newAttributes = list(newAttributes)
     print("New Attributes")
     print(newAttributes)
     print
 
+    # Step 4
+    # check for any lost attributes
     lostAttributes = [x for x in attributes if x not in newAttributes]
     if lostAttributes:
+        print 'Lost Attributes ...',lostAttributes,'\n'
         schemas.append(tuple((superkey.union(set(lostAttributes)),[])))
         print("Schemas NEW")
         for schema in schemas:
@@ -61,10 +64,11 @@ def threenf(attributes, fdList):
             print
         return ([schema[0] for schema in schemas],[schema[1] for schema in schemas]);
 
-
+    # return if the schema already includes the superkey
     for schema in schemas:
         if schema[0] == superkey: return ([schema[0] for schema in schemas],[schema[1] for schema in schemas]);
 
+    #otheriwise, add the superkey
     schemas.append(tuple((superkey,[])))
     return ([schema[0] for schema in schemas],[schema[1] for schema in schemas]);
 
