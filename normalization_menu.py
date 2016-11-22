@@ -6,7 +6,7 @@ from computations import *
 
 
 def getTableChoice(tables):
-    print
+    print("\nTables:")
     for table in tables.keys():
         print table
     print('q (quit application)\n')
