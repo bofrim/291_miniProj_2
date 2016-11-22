@@ -62,10 +62,10 @@ def closureStory(cursor):
         attributes = raw_input("Please specify the set Attributes (seperated by commas): ")
         if attributes.upper() == 'Q': return
         else:
-            attributes = set(attributes.split(','))
+            attributes = set([x.strip() for x in attributes.split(',')])
             fdTableNames = getFDTables()
             if fdTableNames.upper() == 'Q': return
-            fdTableNames = fdTableNames.split(',')
+            fdTableNames = [x.strip() for x in fdTableNames.split(',')]
             print
             fdDataUnion = createFDUnions(fdTableNames, cursor)
             printUnion(fdDataUnion)
