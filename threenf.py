@@ -3,7 +3,7 @@ import sys
 import computations
 import copy
 
-def threenf(attributes, fdList):
+def convertToThreeNF(attributes, fdList):
     '''
     Synthesize relation into 3NF
 
@@ -70,7 +70,8 @@ def threenf(attributes, fdList):
 
     #otheriwise, add the superkey
     schemas.append(tuple((superkey,[])))
-    return ([schema[0] for schema in schemas],[schema[1] for schema in schemas]);
+    # return ([schema[0] for schema in schemas],[schema[1] for schema in schemas]);
+    return schemas
 
 def minimal_cover(FDs):
     # 1. Make RHS of each FD into a single attribute

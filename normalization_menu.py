@@ -17,15 +17,15 @@ def getTableChoice(tables):
             return 'Q'
     return choice
 
-def getNormalizationType(attributes, fdList):
+def normalize(attributes, fdList):
     while(True):
         choice = raw_input("Do you want 'BCNF' or '3NF': ")
         if choice.upper() == "BCNF":
-            return bcnf(fdList)
+            return convertToBCNF(fdList)
         if choice.upper() == "3NF":
-            return threenf(attributes, fdList)
-        if db == "q":
-            return db
+            return convertToThreeNF(attributes, fdList)
+        if choice.upper() == "Q":
+            return "Q"
 
 def normalizationStory(tables, cursor):
     tableChoice = getTableChoice(tables)
@@ -45,6 +45,10 @@ def normalizationStory(tables, cursor):
     print("Original Attributes")
     print(attributes)
     print
-
-    getNormalizationType(attributes,fdList)
+    schemas = normalize(attributes,fdList)
+    if schemas == 'Q': return
+    while(True):
+        choice = raw_input("Normalization Complete...\nWould you like to commit these changes? (y/n): ")
+        if choice.upper()  == 'N': return
+    # computations.createTablesFromDecomposition(schemas);
     return
