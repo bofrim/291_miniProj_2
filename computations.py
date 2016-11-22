@@ -151,7 +151,7 @@ def createTablesFromDecomposition(decomposition):
         #generate the create column stirng
         attrCount = 0
         for attr in schema[0]:
-            columnNames += " `" + attr + "`"
+            columnNames += " " + attr + ""
             columnNames += " "
             columnNames += "TEXT" # TO DO: actually get the types
             if (attrCount < len(schema[0]) - 1): 
@@ -164,36 +164,33 @@ def createTablesFromDecomposition(decomposition):
         # primaryKeyStr = ",".join(primaryKeySet)
         primaryKeyStr = ""
         for keyAttr in primaryKeySet:
-            primaryKeyStr += "`" + keyAttr + "`"
+            primaryKeyStr += "" + keyAttr + ""
             if (attrCount < len(primaryKeySet) - 1): 
                 primaryKeyStr += ","
             attrCount += 1
 
 
-        createTableStr = ' CREATE TABLE `' + tableName + '` (' + columnNames + ', ' + 'PRIMARY KEY (' + primaryKeyStr + ')' + '); '
+        createTableStr = ' CREATE TABLE ' + tableName + ' (' + columnNames + ', ' + 'PRIMARY KEY (' + primaryKeyStr + ')' + '); '
 
         # print "create table str"
         # print createTableStr
 
         c.execute(createTableStr)
         # create column
-
-
         # now make a fd table
         fdTableName = "Output_FDS_R1_" + involvedAttributeString
 
-        createFDTableStr = ' CREATE TABLE ' + fdTableName + ' ( `LHS` TEXT, `RHS` TEXT ); '
+        createFDTableStr = ' CREATE TABLE ' + fdTableName + ' ( LHS TEXT, RHS TEXT ); '
         c.execute(createFDTableStr)
 
         # print "crate fd table str"
         # print createFDTableStr
-
         # add funtional dependancies
         for fd in schema[1]:
             LHS = ",".join(fd[0])
             RHS = ",".join(fd[1])
             # print LHS + " | " + RHS   
-            insertStatement = 'INSERT INTO ' + fdTableName + ' VALUES ("'+ LHS +'", "'+ RHS +'")'
+            insertStatement = 'INSERT INTO ' + fdTableName + ' VALUES ('+ LHS +', '+ RHS +')'
             # print insertStatement
             c.execute( insertStatement)
         conn.commit()

@@ -10,6 +10,19 @@ from computations import *
 
 AttrTypes = {}
 
+def getAttrTypes(createTableStr):
+
+    openBracketI = createTableStr.find('(')
+    closedBracketI = createTableStr.find(')')
+    data = createTableStr[openBracketI:closedBracketI]
+    attrItems = data.split(",")
+    typeDict = dict()
+    for attrWithType in attrItems:
+        print item
+        item
+
+
+
 def createDict(tables):
     names = []
     fds = []
@@ -33,7 +46,15 @@ def createDict(tables):
 if __name__ == "__main__":
     connection = menu.getDataBaseConnection()
     cursor = connection.cursor()
+    cursor.execute("SELECT * FROM SQLITE_MASTER;")
+    tableData = cursor.fetchall()
+    for data in tableData:
+        tableName = data[1]
+        if("fds" not in tableName.lower()):
+            print data[4]
+            getAttrTypes(data[4])
     tables = cursor.execute("SELECT name FROM SQLITE_MASTER WHERE type = 'table';")
+
     tables = createDict(tables)
     
 
