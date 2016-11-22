@@ -1,6 +1,7 @@
 import sqlite3
 import copy
 import sys
+import main
 
 def closure(X, FDs):
     # Take a set of attributes, X, and an array of tuples of sets, FDs, representing all of the functional dependencies for the table: conpute the closure of X
@@ -153,7 +154,7 @@ def createTablesFromDecomposition(decomposition):
         for attr in schema[0]:
             columnNames += " " + attr + ""
             columnNames += " "
-            columnNames += "TEXT" # TO DO: actually get the types
+            columnNames += main.AttrTypes[attr] # TO DO: actually get the types
             if (attrCount < len(schema[0]) - 1):
                 columnNames += ","
             attrCount += 1
