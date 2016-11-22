@@ -200,14 +200,14 @@ def makeSelect(attrs):
         selectParameterStr + ", " + attr
     return selectParameterStr[:-2]
 
-def createNewFilledTables(attributes, newTableName, oldTableName, cursor):
+def createNewFilledTable(attributes, newTableName, oldTableName, cursor):
     selectParameterStr = makeSelect()
     dropStr = " DROP TABLE IF EXISTS " + newTableName + ";"
     createStr = "CREATE TABLE " + newTableName + " AS SELECT " + selectParameterStr + " FROM " + oldTableName + ";"
     cursor.execute(dropStr)
     cursor.execute(createStr)
 
-def createNewEmptyTables(attributes, newTableName, oldTableName, cursor):
+def createNewEmptyTable(attributes, newTableName, oldTableName, cursor):
     selectParameterStr = makeSelect()
     dropStr = " DROP TABLE IF EXISTS " + newTableName + ";"
     createStr = "CREATE TABLE " + newTableName + " AS SELECT " + selectParameterStr + " FROM " + oldTableName + " WHERE False;"
