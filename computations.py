@@ -91,7 +91,7 @@ def copyFDs(FDs):
         new_FDs.append(tuple((FD[0], FD[1])))
     return new_FDs
 
-# is dependancy preserving if the closure of the decomposed functional dependacies is the 
+# is dependancy preserving if the closure of the decomposed functional dependacies is the
 # same as the closure of the original functional dependancies
 def isDependancyPreserving(original, decomposition):
     print "decomposition"
@@ -111,7 +111,7 @@ def isDependancyPreserving(original, decomposition):
     for schema in decomposition:
         for FD in schema[1]:
             decomopsitionFDs.append(FD)
-    
+
     # print "Unioned FDs"
     # print decomopsitionFDs
 
@@ -119,7 +119,7 @@ def isDependancyPreserving(original, decomposition):
     decompositionFDClosure = []
     for FD in decomopsitionFDs:
         decompositionFDClosure.append((FD[0],closure(copy.deepcopy(FD[0]),copy.deepcopy(decomopsitionFDs))))
-    
+
     # print "Unioned FDs closure"
     # print decompositionFDClosure
 
@@ -132,7 +132,7 @@ def isDependancyPreserving(original, decomposition):
     return True
 
 def createTablesFromDecomposition(decomposition):
-    
+
     db_file_path="./mp2.db"
     conn = sqlite3.connect(db_file_path)
 
@@ -154,7 +154,7 @@ def createTablesFromDecomposition(decomposition):
             columnNames += " " + attr + ""
             columnNames += " "
             columnNames += "TEXT" # TO DO: actually get the types
-            if (attrCount < len(schema[0]) - 1): 
+            if (attrCount < len(schema[0]) - 1):
                 columnNames += ","
             attrCount += 1
 
@@ -166,6 +166,7 @@ def createTablesFromDecomposition(decomposition):
         for keyAttr in primaryKeySet:
             primaryKeyStr += "" + keyAttr + ""
             if (attrCount < len(primaryKeySet) - 1): 
+
                 primaryKeyStr += ","
             attrCount += 1
 
@@ -189,21 +190,9 @@ def createTablesFromDecomposition(decomposition):
         for fd in schema[1]:
             LHS = ",".join(fd[0])
             RHS = ",".join(fd[1])
-            # print LHS + " | " + RHS   
-            insertStatement = 'INSERT INTO ' + fdTableName + ' VALUES ('+ LHS +', '+ RHS +')'
+
+            # print LHS + " | " + RHS
+            insertStatement = 'INSERT INTO ' + fdTableName + ' VALUES ("'+ LHS +'", "'+ RHS +'")'
             # print insertStatement
             c.execute( insertStatement)
         conn.commit()
-
-        
-
-    
-
-
-
-    
-
-
-
-
-

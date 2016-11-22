@@ -44,6 +44,8 @@ def equivalenceStory(tables, cursor):
     # get a list of the functional dependencies
     F1 = getFDUnion(F1_names, cursor, tables)
     F2 = getFDUnion(F2_names, cursor, tables)
+    # raw_input("DBug: ____"+str(F1)+"____")
+    # raw_input("DBug: ____"+str(F1)+"____")
     if checkEquivalence(F1, F2) and checkEquivalence(F2, F1):
         print
         print "The sets of functional dependancies are equivalent!"
