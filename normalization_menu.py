@@ -1,8 +1,8 @@
 import sqlite3
 import sys
-from bcnf import *
-from threenf import *
-from computations import *
+import bcnf
+import threenf
+import computations
 
 
 def getTableChoice(tables):
@@ -21,11 +21,12 @@ def normalize(attributes, fdList):
     while(True):
         choice = raw_input("Do you want 'BCNF' or '3NF': ")
         if choice.upper() == "BCNF":
-            return convertToBCNF([(set(attributes),fdList)])
+            return bcnf.convertToBCNF([(set(attributes),fdList)])
         if choice.upper() == "3NF":
-            return convertToThreeNF(attributes, fdList)
+            return threenf.convertToThreeNF(attributes, fdList)
         if choice.upper() == "Q":
             return "Q"
+
 
 def normalizationStory(tables, cursor):
     tableChoice = getTableChoice(tables)
@@ -35,7 +36,7 @@ def normalizationStory(tables, cursor):
     fdTableName = cursor.execute("SELECT name FROM SQLITE_MASTER WHERE NAME LIKE ?;", ('%'+tables[tableChoice]+'%',))
     fdTableName = fdTableName.fetchone()
     fdData = cursor.execute("SELECT * FROM {0};".format(fdTableName[0]))
-    fdList = createFDList(fdData)
+    fdList = computations.createFDList(fdData)
 
     # get a list of the attributes
     attribTableName = cursor.execute("SELECT name FROM SQLITE_MASTER WHERE NAME LIKE ?;", ('Input_'+tableChoice+'%',))
@@ -56,5 +57,6 @@ def normalizationStory(tables, cursor):
         if choice.upper()  == 'N': return
 
     # fill the new data tables according to the decomposition, using the data in the input data table
+    computations.createNewTables(decomposition)
 
     return
