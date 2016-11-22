@@ -144,7 +144,7 @@ def createTablesFromDecomposition(decomposition):
         for attr in schema[0]:
             involvedAttributeString += attr
         tableName = "Output_R1_" + involvedAttributeString
-        print "name of new table: " + tableName
+        # print "name of new table: " + tableName
         # Create table
         columnNames = ""
 
@@ -172,8 +172,8 @@ def createTablesFromDecomposition(decomposition):
 
         createTableStr = ' CREATE TABLE `' + tableName + '` (' + columnNames + ', ' + 'PRIMARY KEY (' + primaryKeyStr + ')' + '); '
 
-        print "create table str"
-        print createTableStr
+        # print "create table str"
+        # print createTableStr
 
         c.execute(createTableStr)
         # create column
@@ -185,16 +185,16 @@ def createTablesFromDecomposition(decomposition):
         createFDTableStr = ' CREATE TABLE ' + fdTableName + ' ( `LHS` TEXT, `RHS` TEXT ); '
         c.execute(createFDTableStr)
 
-        print "crate fd table str"
-        print createFDTableStr
+        # print "crate fd table str"
+        # print createFDTableStr
 
         # add funtional dependancies
         for fd in schema[1]:
             LHS = ",".join(fd[0])
             RHS = ",".join(fd[1])
-            print LHS + " | " + RHS   
+            # print LHS + " | " + RHS   
             insertStatement = 'INSERT INTO ' + fdTableName + ' VALUES ("'+ LHS +'", "'+ RHS +'")'
-            print insertStatement
+            # print insertStatement
             c.execute( insertStatement)
         conn.commit()
 

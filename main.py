@@ -8,6 +8,8 @@ import equivalence_menu
 import closure_menu
 from computations import *
 
+AttrTypes = {}
+
 def createDict(tables):
     names = []
     fds = []
@@ -24,12 +26,16 @@ def createDict(tables):
             if n in f: d[n] = f
     return d
 
+# def getAttributeTypes(tables):
+#     for r in tables:
+
 
 if __name__ == "__main__":
     connection = menu.getDataBaseConnection()
     cursor = connection.cursor()
     tables = cursor.execute("SELECT name FROM SQLITE_MASTER WHERE type = 'table';")
     tables = createDict(tables)
+    
 
     print("\nConnected to Database!")
     choice = ""
