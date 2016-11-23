@@ -132,7 +132,7 @@ def isDependancyPreserving(original, decomposition):
             return False
     return True
 
-def createTablesFromDecomposition(decomposition):
+def createTablesFromDecomposition(decomposition):s
 
     db_file_path="./MiniProject2-InputExample.db"
     conn = sqlite3.connect(db_file_path)
@@ -194,22 +194,49 @@ def createTablesFromDecomposition(decomposition):
             c.execute( insertStatement)
         conn.commit()
 
-def makeSelect(attrs):
-    selectParameterStr = ""
-    for attr in attr:
-        selectParameterStr + ", " + attr
-    return selectParameterStr[:-2]
+def makeSelect(attrList):
+    return ", ".join(attrList)
 
-def createNewFilledTable(attributes, newTableName, oldTableName, cursor):
-    selectParameterStr = makeSelect()
-    dropStr = " DROP TABLE IF EXISTS " + newTableName + ";"
-    createStr = "CREATE TABLE " + newTableName + " AS SELECT " + selectParameterStr + " FROM " + oldTableName + ";"
-    cursor.execute(dropStr)
-    cursor.execute(createStr)
+def makePrimaryKeyStr(primaryKeySet):
+    return ", ".join(["`"+keyAttr+"`" for keyAttr in primaryKeySet])
 
-def createNewEmptyTable(attributes, newTableName, oldTableName, cursor):
-    selectParameterStr = makeSelect()
+
+def createNewFilledTables(decomposition, originalTableNameAbreviation, originalDataBaseName):
+    raw_input("Get rid of hardcoded DB name")
+    raw_input("TODO: Ensure the naming convention for the database here is consistant with the original input.\n (include .db?")
+    db_file_path="./" + "MiniProject2-InputExample" + ".db"
+    conn = sqlite3.connect(db_file_path)
+    c = conn.cursor()
+    for tableInfo in decomposition:
+        attributes = decomposition[0]
+        attributeStr = "".join(attributes)
+        oldTableName = "Input_" + originalTableNameAbreviation + "_" + attributeStr
+        newTableName = "Output_" + originalTableNameAbreviation + "_" + attributeStr
+        superKey = getKeyFromFDs(schema[0],schema[1])
+        createNewEmptyTables(attributes, newTableName, oldTableName, superKey, c)
+        createFilledFDTable()
+
+def fillTable(attributes, newTableName, oldTableName, cursor):
+    selectParameterStr = makeSelect(attributes)
+    insertStr = "INSERT INTO " + newTableName + " (SELECT " + selectParameterStr + " FROM " + oldTableName + ");"
+    cursor.execute(insertStr)
+
+def createNewEmptyTables(attributes, newTableName, oldTableName, superKey, cursor):
     dropStr = " DROP TABLE IF EXISTS " + newTableName + ";"
-    createStr = "CREATE TABLE " + newTableName + " AS SELECT " + selectParameterStr + " FROM " + oldTableName + " WHERE False;"
     cursor.execute(dropStr)
-    cursor.execute(createStr)
+    createTableStr = "CREATE TABLE "+ newTableName +"("
+    for attribute in attributes:
+        createTableStr += attribute +" "+ typeOfAttribute(attribute) +", "
+    createTableStr += " PRIMARY KEY (" + makePrimaryKeyStr(superKey) + "));"
+    cursor.execute(createTableStr)
+    fillTable(attributes, newTableName, oldTableName, superKey, cursor)
+
+def createFilledFDTable(attributes, FDset, oldTableName, cursor):
+    originalTableNameAbreviation = oldTabelName[6:]
+    attributeStr = "".join(attributes)
+    newTableName = "Output_FDS_" + originalTableNameAbreviation + "_ "+attributeStr
+    createTableStr = "CREATE TABLE "+ newTableName +" ( LHS TEXT, RHS TEXT );"
+    cursor.execute(createTableStr)
+    for FD in FDset:
+        insertStr = "INSERT INTO " + newTableName + " (LHS, RHS) VALUES (" + makeSelect(FD[0]), makeSelect(FD[1]) + ");"
+    pass
