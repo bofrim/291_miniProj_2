@@ -122,4 +122,5 @@ if __name__ == '__main__':
 
     print "test create table logic"
 
-    computations.createTablesFromDecomposition(decomposition)
+    # computations.createTablesFromDecomposition(decomposition)
+    computations.createNewFilledTables(decomposition,"R1","MiniProject2-InputExample.db")

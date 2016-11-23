@@ -15,9 +15,9 @@ def getAttrTypes(createTableStr):
     closedBracketI = createTableStr.find(')')
     data = createTableStr[openBracketI + 1:closedBracketI]
     data = data.replace("\n", "")
-    # print data
+    print data
     attrItems = data.split(",")
-    # print attrItems
+    print attrItems
     typeDict = dict()
     for attrWithType in attrItems:
         attrWithType = attrWithType.strip()
@@ -54,9 +54,11 @@ if __name__ == "__main__":
     # get the types fro each attribite
     for data in tableData:
         tableName = data[1]
-        if("fds" not in tableName.lower()):
+        if("fds" not in tableName.lower() and "input" in tableName.lower()):
+            print "data[4]"
             print data[4]
             getAttrTypes(data[4])
+
     tables = cursor.execute("SELECT name FROM SQLITE_MASTER WHERE type = 'table';")
 
     tables = createDict(tables)
@@ -70,14 +72,14 @@ if __name__ == "__main__":
         elif choice.upper() == 'C': closure_menu.closureStory(cursor)
         elif choice.upper() == 'E': equivalence_menu.equivalenceStory(tables, cursor)
         elif choice.upper() == 'Q': sys.exit(0)
-# else:
-#     connection = menu.getDataBaseConnection()
-#     cursor = connection.cursor()
-#     cursor.execute("SELECT * FROM SQLITE_MASTER;")
-#     tableData = cursor.fetchall()
-#     # get the types fro each attribite
-#     for data in tableData:
-#         tableName = data[1]
-#         if("fds" not in tableName.lower()):
-#             print data[4]
-#             getAttrTypes(data[4])
+else:
+    connection = menu.getDataBaseConnection()
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM SQLITE_MASTER;")
+    tableData = cursor.fetchall()
+    # get the types fro each attribite
+    for data in tableData:
+        tableName = data[1]
+        if("fds" not in tableName.lower() and "input" in tableName.lower()):
+            print data[4]
+            getAttrTypes(data[4])
