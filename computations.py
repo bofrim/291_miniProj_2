@@ -132,6 +132,7 @@ def isDependancyPreserving(original, decomposition):
             return False
     return True
 
+
 def createTablesFromDecomposition(decomposition):
 
     db_file_path="./MiniProject2-InputExample.db"
@@ -175,6 +176,7 @@ def createTablesFromDecomposition(decomposition):
         createTableStr = ' CREATE TABLE ' + tableName + ' (' + columnNames + ', ' + 'PRIMARY KEY (' + primaryKeyStr + ')' + '); '
         c.execute(dropTableStr)
         c.execute(createTableStr)
+
 
         # now make a fd table
         fdTableName = "Output_FDS_R1_" + involvedAttributeString
