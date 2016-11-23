@@ -7,6 +7,7 @@ import normalization_menu
 import equivalence_menu
 import closure_menu
 
+
 AttrTypes = {}
 
 def getAttrTypes(createTableStr):
@@ -24,6 +25,13 @@ def getAttrTypes(createTableStr):
         itemTypePairs = attrWithType.split(" ")
         AttrTypes[itemTypePairs[0]] = itemTypePairs[1].rstrip()
 
+def deleteOutputTables(cursor):
+    cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+    tables = cursor.fetchall()
+    print tables
+    deleteTables = [table[0] for table in tables if "output" in table[0].lower()]
+    for table in deleteTables:
+        cursor.execute("DROP TABLE IF EXISTS " + table + ";")
 
 
 def createDict(tables):
@@ -49,6 +57,8 @@ def createDict(tables):
 if __name__ == "__main__":
     connection = menu.getDataBaseConnection()
     cursor = connection.cursor()
+    deleteOutputTables(cursor)
+    connection.commit()
     cursor.execute("SELECT * FROM SQLITE_MASTER;")
     tableData = cursor.fetchall()
     # get the types fro each attribite
@@ -75,6 +85,8 @@ if __name__ == "__main__":
 else:
     connection = menu.getDataBaseConnection()
     cursor = connection.cursor()
+    deleteOutputTables(cursor)
+    connection.commit()
     cursor.execute("SELECT * FROM SQLITE_MASTER;")
     tableData = cursor.fetchall()
     # get the types fro each attribite

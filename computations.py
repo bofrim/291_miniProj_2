@@ -135,7 +135,6 @@ def isDependancyPreserving(original, decomposition):
 
 def createTablesFromDecomposition(decomposition):
 
-
     db_file_path="./MiniProject2-InputExample.db"
     conn = sqlite3.connect(db_file_path)
 
@@ -201,7 +200,7 @@ def makeSelect(attrList):
     return ", ".join(attrList)
 
 def makePrimaryKeyStr(primaryKeySet):
-    return ", ".join(["`"+keyAttr+"`" for keyAttr in primaryKeySet])
+    return ", ".join([keyAttr for keyAttr in primaryKeySet])
 
 
 def createNewFilledTables(decomposition, originalTableNameAbreviation, originalDataBaseName):
@@ -225,14 +224,18 @@ def createNewFilledTables(decomposition, originalTableNameAbreviation, originalD
 
 def fillTable(attributes, newTableName, oldTableName, cursor):
     selectParameterStr = makeSelect(attributes)
-    insertStr = "INSERT INTO " + newTableName + " SELECT " + selectParameterStr + " FROM " + oldTableName + ";"
+    insertStr = "INSERT INTO " + newTableName + " SELECT DISTINCT " + selectParameterStr + " FROM " + oldTableName + ";"
     print("input string")
     print insertStr
+    # try:
     cursor.execute(insertStr)
+    # except:
+    #     print "err"
+
 
 def createNewEmptyTables(attributes, newTableName, oldTableName, superKey, cursor):
-    dropStr = " DROP TABLE IF EXISTS " + newTableName + ";"
-    cursor.execute(dropStr)
+    # dropStr = " DROP TABLE IF EXISTS " + newTableName + ";"
+    # cursor.execute(dropStr)
     
     createTableStr = "CREATE TABLE "+ newTableName +"("
     for attribute in attributes:
@@ -242,13 +245,9 @@ def createNewEmptyTables(attributes, newTableName, oldTableName, superKey, curso
     fillTable(attributes, newTableName, oldTableName, cursor)
 
 def createFilledFDTable(attributes, FDset, oldTableName, cursor):
-
-
     originalTableNameAbreviation = oldTableName[6:]
     attributeStr = "".join(attributes)
-    newTableName = "Output_FDS_" + originalTableNameAbreviation + "_"+attributeStr
-    dropStr = " DROP TABLE IF EXISTS " + newTableName + ";"
-    cursor.execute(dropStr)    
+    newTableName = "Output_FDS_" + originalTableNameAbreviation + "_"+attributeStr 
     createTableStr = "CREATE TABLE "+ newTableName +" ( LHS TEXT, RHS TEXT );"
     cursor.execute(createTableStr)
     for FD in FDset:
