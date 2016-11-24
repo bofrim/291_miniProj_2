@@ -11,7 +11,7 @@ def getTableChoice(tables):
         print table
     print("\nEnter Q at anytime to quit")
     choice = " "
-    while choice not in table:
+    while choice not in tables:
         choice = raw_input("From the list above which table would you like to normalize? ")
         if choice == "q" or choice == '\n':
             return 'Q'
@@ -55,8 +55,9 @@ def normalizationStory(dbName, tables, cursor):
     while(True):
         choice = raw_input("Normalization Complete...\nWould you like to commit these changes? (y/n): ")
         if choice.upper()  == 'N': return
+        if choice.upper()  == 'Y': break
 
     # fill the new data tables according to the decomposition, using the data in the input data table
-    computations.createNewFilledTables(dbName, decomposition, originalTableNameAbreviation, originalDataBaseName)
+    computations.createNewFilledTables(dbName, decomposition, tableChoice, dbName)
 
     return
