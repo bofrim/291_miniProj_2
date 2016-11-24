@@ -1,8 +1,6 @@
 import sqlite3
 import sys
 import menu
-import bcnf
-import threenf
 import normalization_menu
 import equivalence_menu
 import closure_menu
