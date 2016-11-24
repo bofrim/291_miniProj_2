@@ -150,7 +150,7 @@ def fillTable(attributes, newTableName, oldTableName, cursor):
 def createAndFillTable(attributes, newTableName, oldTableName, superKey, cursor):
     createTableStr = "CREATE TABLE "+ newTableName +"("
     for attribute in attributes:
-        createTableStr += attribute +" "+ ColumnTypes.getTypes()[attribute] +", "
+        createTableStr += attribute +" "+ ColumnTypes.getType(attribute) + ", "
     createTableStr += " PRIMARY KEY (" + makePrimaryKeyStr(superKey) + "));"
     cursor.execute(createTableStr)
     fillTable(attributes, newTableName, oldTableName, cursor)

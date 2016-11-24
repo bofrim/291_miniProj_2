@@ -4,9 +4,10 @@ class ColumnTypes:
     @staticmethod
     def setTypes(newTypes):
         ColumnTypes.types = newTypes
-        print '********************* Types Set ***************************'
-        print ColumnTypes.types
 
     @staticmethod
-    def getTypes():
-        return ColumnTypes.types
+    def getType(attr):
+        if attr in ColumnTypes.types:
+            return ColumnTypes.types[attr]
+        else:
+            return "TEXT"

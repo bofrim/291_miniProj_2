@@ -20,9 +20,10 @@ def getAttrTypes(createTableStr):
     print attrItems
     typeDict = dict()
     for attrWithType in attrItems:
-        attrWithType = attrWithType.strip()
-        itemTypePairs = attrWithType.split(" ")
-        AttrTypes[itemTypePairs[0].strip()] = itemTypePairs[1].strip()
+            attrWithType = attrWithType.strip()
+            itemTypePairs = attrWithType.split(" ")
+            if(len(itemTypePairs) == 2):
+                AttrTypes[itemTypePairs[0].strip()] = itemTypePairs[1].strip()
     return AttrTypes
 
 def deleteOutputTables(cursor):
@@ -42,8 +43,6 @@ def createDict(tables):
         r = r.strip('\',)')
         if 'FDs' in str(r): fds.append(r)
         if 'FDs' not in str(r): names.append(r)
-
-
     d = {}
     for n in names:
         for f in fds:
