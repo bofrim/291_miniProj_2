@@ -95,35 +95,20 @@ def copyFDs(FDs):
 # is dependancy preserving if the closure of the decomposed functional dependacies is the
 # same as the closure of the original functional dependancies
 def isDependancyPreserving(original, decomposition):
-    print "decomposition"
-    print decomposition
-
     originalCpy = copy.deepcopy(original)
     origninalFDClosure = []
     for schema in originalCpy:
         for FD in schema[1]:
             origninalFDClosure.append((FD[0],closure(copy.deepcopy(FD[0]),copy.deepcopy(schema[1]))))
-
-    # print "Original FD closure"
-    # print origninalFDClosure
-
     # get a union of all functional dependancies in the decomposition
     decomopsitionFDs = []
     for schema in decomposition:
         for FD in schema[1]:
             decomopsitionFDs.append(FD)
-
-    # print "Unioned FDs"
-    # print decomopsitionFDs
-
     # now get the closure of the union
     decompositionFDClosure = []
     for FD in decomopsitionFDs:
         decompositionFDClosure.append((FD[0],closure(copy.deepcopy(FD[0]),copy.deepcopy(decomopsitionFDs))))
-
-    # print "Unioned FDs closure"
-    # print decompositionFDClosure
-
     #now do a comparison
     #check that all the original fds are in the decomposition
     # this works because all fds in the decomposition must be in the original
@@ -133,75 +118,11 @@ def isDependancyPreserving(original, decomposition):
     return True
 
 
-def createTablesFromDecomposition(decomposition):
-
-    db_file_path="./MiniProject2-InputExample.db"
-    conn = sqlite3.connect(db_file_path)
-
-    c = conn.cursor()
-
-    for schema in decomposition:
-        #create a table for each schema
-        involvedAttributeString = ""
-        for attr in schema[0]:
-            involvedAttributeString += attr
-        tableName = "Output_R1_" + involvedAttributeString
-        # print "name of new table: " + tableName
-        # Create table
-        columnNames = ""
-
-        #generate the create column stirng
-        attrCount = 0
-        for attr in schema[0]:
-            columnNames += " " + attr + ""
-            columnNames += " "
-            columnNames += ColumnTypes.getTypes()[attr]
-             # TO DO: actually get the types
-            if (attrCount < len(schema[0]) - 1):
-                columnNames += ","
-            attrCount += 1
-
-        #gernerate the create primary key string
-        attrCount = 0
-        primaryKeySet = getKeyFromFDs(schema[0],schema[1])
-        # primaryKeyStr = ",".join(primaryKeySet)
-        primaryKeyStr = ""
-        for keyAttr in primaryKeySet:
-            primaryKeyStr += "`" + keyAttr + "`"
-            if (attrCount < len(primaryKeySet) - 1):
-                primaryKeyStr += ","
-            attrCount += 1
-
-
-        dropTableStr = " DROP TABLE IF EXISTS " + tableName + ";"
-        createTableStr = ' CREATE TABLE ' + tableName + ' (' + columnNames + ', ' + 'PRIMARY KEY (' + primaryKeyStr + ')' + '); '
-        c.execute(dropTableStr)
-        c.execute(createTableStr)
-
-
-        # now make a fd table
-        fdTableName = "Output_FDS_R1_" + involvedAttributeString
-        createFDTableStr = ' CREATE TABLE ' + fdTableName + ' ( `LHS` TEXT, `RHS` TEXT ); '
-        dropFDTableStr = " DROP TABLE IF EXISTS " + fdTableName + ";"
-        c.execute(dropFDTableStr)
-        c.execute(createFDTableStr)
-
-        # add funtional dependancies
-        for fd in schema[1]:
-            LHS = ",".join(fd[0])
-            RHS = ",".join(fd[1])
-
-            # print LHS + " | " + RHS
-            insertStatement = 'INSERT INTO ' + fdTableName + ' VALUES ("'+ LHS +'", "'+ RHS +'")'
-            # print insertStatement
-            c.execute( insertStatement)
-        conn.commit()
-
 def makeSelect(attrList):
-    return ", ".join(attrList)
+    return ",".join(attrList)
 
 def makePrimaryKeyStr(primaryKeySet):
-    return ", ".join([keyAttr for keyAttr in primaryKeySet])
+    return ",".join([keyAttr for keyAttr in primaryKeySet])
 
 
 def createNewFilledTables(connection, decomposition, originalTableNameAbreviation):
@@ -240,6 +161,13 @@ def createFilledFDTable(attributes, FDset, oldTableName, cursor):
     newTableName = "Output_FDS_" + originalTableNameAbreviation + "_"+attributeStr
     createTableStr = "CREATE TABLE "+ newTableName +" ( LHS TEXT, RHS TEXT );"
     cursor.execute(createTableStr)
+    # print "************************FDS****************************"
+    # print FDset
     for FD in FDset:
+        # print FD[0]
+        # print FD[1]
+        # print makeSelect(FD[0])
+        # print makeSelect(FD[1])
         insertStr = "INSERT INTO " + newTableName + " (LHS, RHS) VALUES ('" + makeSelect(FD[0]) + "','" + makeSelect(FD[1]) + "');"
-    pass
+        cursor.execute(insertStr)
+    
