@@ -62,11 +62,11 @@ def convertToThreeNF(attributes, fdList):
         for schema in schemas:
             print(schema)
             print
-        return ([schema[0] for schema in schemas],[schema[1] for schema in schemas]);
+        return schemas#([schema[0] for schema in schemas],[schema[1] for schema in schemas]);
 
     # return if the schema already includes the superkey
     for schema in schemas:
-        if schema[0] == superkey: return ([schema[0] for schema in schemas],[schema[1] for schema in schemas]);
+        if schema[0] == superkey: return schemas#([schema[0] for schema in schemas],[schema[1] for schema in schemas]);
 
     #otheriwise, add the superkey
     schemas.append(tuple((superkey,[])))
