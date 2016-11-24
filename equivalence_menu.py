@@ -7,6 +7,7 @@ import copy
 
 def getTableNames():
     print
+    raw_input("Make it so you can enter output tables ******************")
     print "You will need to provide two sets of dependencies to test equivalence for."
     print "(Use a comma to separate the table names)"
     F1_names = raw_input("Please enter the names of tables that make up the first set: ")

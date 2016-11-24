@@ -22,7 +22,7 @@ def getAttrTypes(createTableStr):
     for attrWithType in attrItems:
         attrWithType = attrWithType.strip()
         itemTypePairs = attrWithType.split(" ")
-        AttrTypes[itemTypePairs[0]] = itemTypePairs[1].rstrip()
+        AttrTypes[itemTypePairs[0].strip()] = itemTypePairs[1].strip()
     return AttrTypes
 
 def deleteOutputTables(cursor):
