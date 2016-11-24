@@ -204,10 +204,8 @@ def makePrimaryKeyStr(primaryKeySet):
     return ", ".join([keyAttr for keyAttr in primaryKeySet])
 
 
-def createNewFilledTables(dbName, decomposition, originalTableNameAbreviation, originalDataBaseName):
-    db_file_path="./" + dbName
-    conn = sqlite3.connect(db_file_path)
-    c = conn.cursor()
+def createNewFilledTables(connection, decomposition, originalTableNameAbreviation):
+    c = connection
     print()
     for tableInfo in decomposition:
         attributes = tableInfo[0]

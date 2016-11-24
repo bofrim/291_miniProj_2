@@ -28,7 +28,7 @@ def normalize(attributes, fdList):
             return "Q"
 
 
-def normalizationStory(dbName, tables, cursor):
+def normalizationStory(connection, tables, cursor):
     tableChoice = getTableChoice(tables)
     if tableChoice.upper() == 'Q': return
 
@@ -58,6 +58,6 @@ def normalizationStory(dbName, tables, cursor):
         if choice.upper()  == 'Y': break
 
     # fill the new data tables according to the decomposition, using the data in the input data table
-    computations.createNewFilledTables(dbName, decomposition, tableChoice, dbName)
+    computations.createNewFilledTables(connection, decomposition, tableChoice)
 
     return
