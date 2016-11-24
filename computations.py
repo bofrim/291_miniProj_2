@@ -203,10 +203,8 @@ def makePrimaryKeyStr(primaryKeySet):
     return ", ".join([keyAttr for keyAttr in primaryKeySet])
 
 
-def createNewFilledTables(decomposition, originalTableNameAbreviation, originalDataBaseName):
-    raw_input("Get rid of hardcoded DB name")
-    raw_input("TODO: Ensure the naming convention for the database here is consistant with the original input.\n (include .db?")
-    db_file_path="./" + "MiniProject2-InputExample" + ".db"
+def createNewFilledTables(dbName, decomposition, originalTableNameAbreviation, originalDataBaseName):
+    db_file_path="./" + dbName
     conn = sqlite3.connect(db_file_path)
     c = conn.cursor()
     print()
@@ -219,7 +217,7 @@ def createNewFilledTables(decomposition, originalTableNameAbreviation, originalD
         superKey = getKeyFromFDs(tableInfo[0],tableInfo[1])
         print "superKey"
         print superKey
-        createNewEmptyTables(attributes, newTableName, oldTableName, superKey, c)
+        createAndFillTable(attributes, newTableName, oldTableName, superKey, c)
         createFilledFDTable(attributes, tableInfo[1], oldTableName, c)
 
 def fillTable(attributes, newTableName, oldTableName, cursor):
@@ -227,16 +225,9 @@ def fillTable(attributes, newTableName, oldTableName, cursor):
     insertStr = "INSERT INTO " + newTableName + " SELECT DISTINCT " + selectParameterStr + " FROM " + oldTableName + ";"
     print("input string")
     print insertStr
-    # try:
     cursor.execute(insertStr)
-    # except:
-    #     print "err"
 
-
-def createNewEmptyTables(attributes, newTableName, oldTableName, superKey, cursor):
-    # dropStr = " DROP TABLE IF EXISTS " + newTableName + ";"
-    # cursor.execute(dropStr)
-    
+def createAndFillTable(attributes, newTableName, oldTableName, superKey, cursor):
     createTableStr = "CREATE TABLE "+ newTableName +"("
     for attribute in attributes:
         createTableStr += attribute +" "+ main.AttrTypes[attribute] +", "
@@ -247,7 +238,7 @@ def createNewEmptyTables(attributes, newTableName, oldTableName, superKey, curso
 def createFilledFDTable(attributes, FDset, oldTableName, cursor):
     originalTableNameAbreviation = oldTableName[6:]
     attributeStr = "".join(attributes)
-    newTableName = "Output_FDS_" + originalTableNameAbreviation + "_"+attributeStr 
+    newTableName = "Output_FDS_" + originalTableNameAbreviation + "_"+attributeStr
     createTableStr = "CREATE TABLE "+ newTableName +" ( LHS TEXT, RHS TEXT );"
     cursor.execute(createTableStr)
     for FD in FDset:
