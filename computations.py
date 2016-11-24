@@ -1,7 +1,7 @@
 import sqlite3
 import copy
 import sys
-import main
+from ColumnTypes import ColumnTypes
 
 def closure(X, FDs):
     # Take a set of attributes, X, and an array of tuples of sets, FDs, representing all of the functional dependencies for the table: conpute the closure of X
@@ -155,7 +155,8 @@ def createTablesFromDecomposition(decomposition):
         for attr in schema[0]:
             columnNames += " " + attr + ""
             columnNames += " "
-            columnNames += main.AttrTypes[attr] # TO DO: actually get the types
+            columnNames += ColumnTypes.getTypes()[attr]
+             # TO DO: actually get the types
             if (attrCount < len(schema[0]) - 1):
                 columnNames += ","
             attrCount += 1
@@ -230,7 +231,7 @@ def fillTable(attributes, newTableName, oldTableName, cursor):
 def createAndFillTable(attributes, newTableName, oldTableName, superKey, cursor):
     createTableStr = "CREATE TABLE "+ newTableName +"("
     for attribute in attributes:
-        createTableStr += attribute +" "+ main.AttrTypes[attribute] +", "
+        createTableStr += attribute +" "+ ColumnTypes.getTypes()[attribute] +", "
     createTableStr += " PRIMARY KEY (" + makePrimaryKeyStr(superKey) + "));"
     cursor.execute(createTableStr)
     fillTable(attributes, newTableName, oldTableName, cursor)

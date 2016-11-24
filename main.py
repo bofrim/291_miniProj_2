@@ -6,13 +6,13 @@ import threenf
 import normalization_menu
 import equivalence_menu
 import closure_menu
+import ColumnTypes
+from ColumnTypes import ColumnTypes
 
-
-AttrTypes = {}
 
 
 def getAttrTypes(createTableStr):
-
+    AttrTypes = {}
     openBracketI = createTableStr.find('(')
     closedBracketI = createTableStr.find(')')
     data = createTableStr[openBracketI + 1:closedBracketI]
@@ -25,6 +25,7 @@ def getAttrTypes(createTableStr):
         attrWithType = attrWithType.strip()
         itemTypePairs = attrWithType.split(" ")
         AttrTypes[itemTypePairs[0]] = itemTypePairs[1].rstrip()
+    return AttrTypes
 
 def deleteOutputTables(cursor):
     cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
@@ -69,7 +70,7 @@ if __name__ == "__main__":
         if("fds" not in tableName.lower() and "input" in tableName.lower()):
             print "data[4]"
             print data[4]
-            getAttrTypes(data[4])
+            ColumnTypes.setTypes(getAttrTypes(data[4]))
 
     tables = cursor.execute("SELECT name FROM SQLITE_MASTER WHERE type = 'table';")
 
@@ -84,19 +85,3 @@ if __name__ == "__main__":
         elif choice.upper() == 'C': closure_menu.closureStory(cursor)
         elif choice.upper() == 'E': equivalence_menu.equivalenceStory(tables, cursor)
         elif choice.upper() == 'Q': sys.exit(0)
-# else:
-#     connInfo = menu.getDataBaseConnection()
-#     connection = connInfo[0]
-#     dbName = connInfo[1]
-#
-#     cursor = connection.cursor()
-#     deleteOutputTables(cursor)
-#     connection.commit()
-#     cursor.execute("SELECT * FROM SQLITE_MASTER;")
-#     tableData = cursor.fetchall()
-#     # get the types for each attribite
-#     for data in tableData:
-#         tableName = data[1]
-#         if("fds" not in tableName.lower() and "input" in tableName.lower()):
-#             print data[4]
-#             getAttrTypes(data[4])
