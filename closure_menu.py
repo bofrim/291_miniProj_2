@@ -35,6 +35,9 @@ def createFDUnions(fdTableNames,cursor):
     return fdDataUnion
 
 def printUnion(union):
+    if not union:
+        print 'Union of FD Tables is Blank!\n'
+        return
     print 'Union of FD Tables: '
     for u in union:
         print [a for a in u[0]],'-->',[a for a in u[1]]
