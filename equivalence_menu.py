@@ -47,23 +47,29 @@ def checkEquivalence(F1, F2):
 
 def equivalenceStory(tables, cursor):
     F1_names, F2_names = getTableNames()
+    if F1_names == [''] and F2_names == ['']:
+        print
+        print "The sets of functional dependancies are equivalent!"
+        return
     if F1_names == -1 or F2_names == -1:
         print "Returning to main menu..."
         print
         return
-
-    # get a list of the functional dependencies
-    F1 = getFDUnion(F1_names, cursor, tables)
-    F2 = getFDUnion(F2_names, cursor, tables)
-    # raw_input("DBug: ____"+str(F1)+"____")
-    # raw_input("DBug: ____"+str(F1)+"____")
-    if checkEquivalence(F1, F2) and checkEquivalence(F2, F1):
+    try:
+        # get a list of the functional dependencies
+        F1 = getFDUnion(F1_names, cursor, tables)
+        F2 = getFDUnion(F2_names, cursor, tables)
+        # raw_input("DBug: ____"+str(F1)+"____")
+        # raw_input("DBug: ____"+str(F1)+"____")
+        if checkEquivalence(F1, F2) and checkEquivalence(F2, F1):
+            print
+            print "The sets of functional dependancies are equivalent!"
+            return
         print
-        print "The sets of functional dependancies are equivalent!"
-        return
-    print
-    print "The sets of functional dependancies are not equivalent :("
-
+        print "The sets of functional dependancies are not equivalent :("
+    except:
+        print
+        print "The sets of functional dependancies are not equivalent :("
 
 
 def test_get_table_names():
