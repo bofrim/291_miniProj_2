@@ -25,7 +25,7 @@ def getFDUnion(fdTableNames, cursor, tables):
     #TODO Test this method with a database
     fdDataUnion = []
     for tableName in fdTableNames:
-        fds = cursor.execute("SELECT name FROM SQLITE_MASTER WHERE NAME LIKE ?;", ('%'+tableName+'%',))
+        fds = cursor.execute("SELECT name FROM SQLITE_MASTER WHERE NAME LIKE ?;", (tableName,))
         fds = fds.fetchone()
         fds = cursor.execute("SELECT * FROM {0};".format(fds[0]))
         fds = computations.createFDList(fds)
@@ -34,7 +34,11 @@ def getFDUnion(fdTableNames, cursor, tables):
 
 def checkEquivalence(F1, F2):
     for fd in F1:
+        # print "fd[1]: "+str(fd[1])+" should be subset of closure:"
+        # print fd[1].issubset(closure(copy.deepcopy(fd[0]), copy.deepcopy(F2)))
+        # raw_input(closure(copy.deepcopy(fd[0]), copy.deepcopy(F2)))
         if not fd[1].issubset(closure(copy.deepcopy(fd[0]), copy.deepcopy(F2))):
+            # raw_input("return false from here")
             # print "______________________________________"
             # print "The violating closure was: element(" + str(fd[0]) + ", " + str(fd[1]) + ") on closure: " + str(closure(copy.deepcopy(fd[0]), copy.deepcopy(F2)))
             # raw_input("______________________________________")
