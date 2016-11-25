@@ -44,9 +44,7 @@ def computeClosures(attributes,FDs):
     '''
     Computes closure of the individual attributes in a list over the specified FDs
     '''
-    # for a in attributes:
     print "Closure of",attributes,"..."
-    #     print [x for x in computations.closure(set(a),FDs)], "\n"
     print [x for x in computations.closure(set(attributes),FDs)], "\n"
 
 def closureStory(cursor):

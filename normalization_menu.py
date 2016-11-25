@@ -23,7 +23,12 @@ def normalize(attributes, fdList):
         if choice.upper() == "BCNF":
             return bcnf.convertToBCNF([(set(attributes),fdList)])
         if choice.upper() == "3NF":
-            return threenf.convertToThreeNF(attributes, fdList)
+            schemas = threenf.convertToThreeNF(attributes, fdList)
+            print("\nGenerated Schemas")
+            for s in schemas:
+                print(s)
+            print
+            return schemas
         if choice.upper() == "Q":
             return "Q"
 
@@ -43,9 +48,9 @@ def normalizationStory(connection, tables, cursor):
     attribTableName = attribTableName.fetchone()
     attribData = cursor.execute("SELECT * FROM {0};".format(attribTableName[0]))
     attributes = [description[0] for description in attribData.description]
-    print("Original Attributes")
-    print(attributes)
-    print
+    # print("Original Attributes")
+    # print(attributes)
+    # print
     decomposition = normalize(attributes,fdList)
     if decomposition == 'Q': return
 

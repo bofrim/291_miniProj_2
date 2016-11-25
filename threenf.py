@@ -21,47 +21,44 @@ def convertToThreeNF(attributes, fdList):
     '''
     # superkey of original relation
     superkey = computations.getKeyFromFDs(set(attributes),fdList)
-    print
-    print("Superkey")
-    print(superkey)
-    print
+    # print
+    # print("Superkey")
+    # print(superkey)
+    # print
 
     # Step 1
     minCover = minimal_cover(fdList)
-    print("Min Cover")
-    print(minCover)
-    print
+    # print("Min Cover")
+    # print(minCover)
+    # print
     partitions = partitionMinCover(minCover)
-    print("Partitions")
-    print(partitions)
-    print
+    # print("Partitions")
+    # print(partitions)
+    # print
 
     # Step 2
     newAttributes = set()
     schemas = createSchemas(partitions)
-    print("Schemas")
     for schema in schemas:
-        print(schema)
-        print
         for guy in schema[0]:
             newAttributes.add(guy)
 
     # Step 3
     newAttributes = list(newAttributes)
-    print("New Attributes")
-    print(newAttributes)
-    print
+    # print("New Attributes")
+    # print(newAttributes)
+    # print
 
     # Step 4
     # check for any lost attributes
     lostAttributes = [x for x in attributes if x not in newAttributes]
     if lostAttributes:
-        print 'Lost Attributes ...',lostAttributes,'\n'
+        # print 'Lost Attributes ...',lostAttributes,'\n'
         schemas.append(tuple((superkey.union(set(lostAttributes)),[])))
-        print("Schemas NEW")
-        for schema in schemas:
-            print(schema)
-            print
+        # print("Schemas After")
+        # for schema in schemas:
+        #     print(schema)
+        #     print
         return schemas#([schema[0] for schema in schemas],[schema[1] for schema in schemas]);
 
     # return if the schema already includes the superkey

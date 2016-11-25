@@ -15,9 +15,9 @@ def getAttrTypes(createTableStr):
     closedBracketI = createTableStr.find(')')
     data = createTableStr[openBracketI + 1:closedBracketI]
     data = data.replace("\n", "")
-    print data
+    # print data
     attrItems = data.split(",")
-    print attrItems
+    # print attrItems
     typeDict = dict()
     for attrWithType in attrItems:
             attrWithType = attrWithType.strip()
@@ -65,8 +65,8 @@ if __name__ == "__main__":
     for data in tableData:
         tableName = data[1]
         if("fds" not in tableName.lower() and "input" in tableName.lower()):
-            print "data[4]"
-            print data[4]
+            # print "data[4]"
+            # print data[4]
             ColumnTypes.setTypes(getAttrTypes(data[4]))
 
     tables = cursor.execute("SELECT name FROM SQLITE_MASTER WHERE type = 'table';")
@@ -78,7 +78,7 @@ if __name__ == "__main__":
     while(True):
         print("\n1. Normalize a Table (N)\n2. Test Closure on a Set of Attributes (C)\n3. Test Equivalency of Sets of Functional Dependencies (E)\n4. Quit Application (Q)")
         choice = raw_input("What would you like to do: ")
-        if choice.upper() == 'N': 
+        if choice.upper() == 'N':
             deleteOutputTables(cursor)
             normalization_menu.normalizationStory(connection, tables, cursor)
         elif choice.upper() == 'C': closure_menu.closureStory(cursor)
