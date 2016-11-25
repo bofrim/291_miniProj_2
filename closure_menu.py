@@ -37,16 +37,17 @@ def createFDUnions(fdTableNames,cursor):
 def printUnion(union):
     print 'Union of FD Tables: '
     for u in union:
-        print [a for a in u[0]],'|',[a for a in u[1]]
+        print [a for a in u[0]],'-->',[a for a in u[1]]
     print
 
 def computeClosures(attributes,FDs):
     '''
     Computes closure of the individual attributes in a list over the specified FDs
     '''
-    for a in attributes:
-        print "Closure of",a,"..."
-        print [x for x in computations.closure(set(a),FDs)], "\n"
+    # for a in attributes:
+    print "Closure of",attributes,"..."
+    #     print [x for x in computations.closure(set(a),FDs)], "\n"
+    print [x for x in computations.closure(set(attributes),FDs)], "\n"
 
 def closureStory(cursor):
     '''
@@ -62,7 +63,9 @@ def closureStory(cursor):
         attributes = raw_input("Please specify the set Attributes (seperated by commas): ")
         if attributes.upper() == 'Q': return
         else:
-            attributes = set([x.strip() for x in attributes.split(',')])
+            # attributes = set([x.strip() for x in attributes.split(',')])
+            attributes = [x.strip() for x in attributes.split(',')]
+            attributes = ''.join(attributes)
             fdTableNames = getFDTables()
             if fdTableNames.upper() == 'Q': return
             fdTableNames = [x.strip() for x in fdTableNames.split(',')]
