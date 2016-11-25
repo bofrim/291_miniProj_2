@@ -22,7 +22,7 @@ def createFDUnions(fdTableNames,cursor):
     Takes a list of FD table names and computes the union of their functional dependencies
     '''
     for name in fdTableNames:
-        if 'FDS' not in name:
+        if 'FDS' not in name and 'FDs' not in name:
             fdTableNames.remove(name)
     fdDataUnion = []
     for tableName in fdTableNames:
