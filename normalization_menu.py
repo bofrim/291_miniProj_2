@@ -59,5 +59,5 @@ def normalizationStory(connection, tables, cursor):
 
     # fill the new data tables according to the decomposition, using the data in the input data table
     computations.createNewFilledTables(connection, decomposition, tableChoice)
-
+    connection.commit()
     return

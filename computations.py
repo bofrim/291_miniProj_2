@@ -126,7 +126,7 @@ def makePrimaryKeyStr(primaryKeySet):
 
 
 def createNewFilledTables(connection, decomposition, originalTableNameAbreviation):
-    c = connection
+    c = connection.cursor()
     print()
     for tableInfo in decomposition:
         attributes = tableInfo[0]
@@ -152,6 +152,7 @@ def createAndFillTable(attributes, newTableName, oldTableName, superKey, cursor)
     for attribute in attributes:
         createTableStr += attribute +" "+ ColumnTypes.getType(attribute) + ", "
     createTableStr += " PRIMARY KEY (" + makePrimaryKeyStr(superKey) + "));"
+    print createTableStr
     cursor.execute(createTableStr)
     fillTable(attributes, newTableName, oldTableName, cursor)
 
@@ -169,5 +170,6 @@ def createFilledFDTable(attributes, FDset, oldTableName, cursor):
         # print makeSelect(FD[0])
         # print makeSelect(FD[1])
         insertStr = "INSERT INTO " + newTableName + " (LHS, RHS) VALUES ('" + makeSelect(FD[0]) + "','" + makeSelect(FD[1]) + "');"
+        print insertStr
         cursor.execute(insertStr)
     

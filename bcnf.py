@@ -64,6 +64,7 @@ def decompose(schema, offendingFD):
             newFd = (fd[LHS], fd[RHS] - schema[FDS][offendingFD][RHS])
             if len(newFd[RHS]) > 0:
                 nonBcnfPartition[FDS].append(newFd)
+    print ((bcnfPartition[ATTRIBUTES],bcnfPartition[FDS]),(nonBcnfPartition[ATTRIBUTES],nonBcnfPartition[FDS]))
     return ((bcnfPartition[ATTRIBUTES],bcnfPartition[FDS]),(nonBcnfPartition[ATTRIBUTES],nonBcnfPartition[FDS]))
 
 
